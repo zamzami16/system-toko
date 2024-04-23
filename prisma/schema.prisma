@@ -1,0 +1,106 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/c                                                li/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum JenisBarang {
+  Barang
+  Jasa
+  Menu
+  Paket
+}
+
+model User {
+  username String @id @db.VarChar(50)
+  password String @db.VarChar(200)
+  token String? @db.VarChar(100)
+  contact_id Int @unique()
+  
+  contact Contact @relation(fields: [contact_id],references: [id])
+
+  @@map("users")
+}
+
+model Contact {
+  id Int @id @default(autoincrement())
+  nama String @db.VarChar(200)
+  alamat String? @db.VarChar(500)
+  email String? @db.VarChar(500)
+  no_hp String? @db.VarChar(20)
+  user User?
+
+  @@map("contacts")
+}
+
+model KategoriBarang {
+  id Int @id @default(autoincrement())
+  nama String @db.VarChar(200)
+  jenis_barang JenisBarang @default(Barang)
+  barangs Barang[]
+
+  @@map("kategori_barang")
+}
+
+model SubKategoriBarang {
+  id Int @id @default(autoincrement())
+  nama String @db.VarChar(200)
+  jenis_barang JenisBarang @default(Barang)
+  barangs Barang[]
+
+  @@map("sub_kategori_barang")
+}
+
+model SatuanBarang {
+  id Int @id @default(autoincrement())
+  nama String @db.VarChar(200)
+  jenis_barang JenisBarang @default(Barang)
+
+  barangs Barang[]
+  @@map("satuan_barang")
+}
+
+model Rak {
+  id Int @id @default(autoincrement())
+  nama String @db.VarChar(200)
+
+  @@map("rak")
+}
+
+model Barang {
+  id Int @id() @default(autoincrement())
+  nama String @db.VarChar(500)
+  jenis_barang JenisBarang @default(Barang)
+  satuan_id Int
+  satuan SatuanBarang @relation(fields: [satuan_id], references: [id])
+  kategori_id Int
+  kategories KategoriBarang @relation(fields: [kategori_id], references: [id])
+  subkategori_id Int
+  subkategories SubKategoriBarang @relation(fields: [subkategori_id], references: [id])
+
+  hpp Decimal @default(0)
+  harga_beli_akhir Decimal @default(0)
+  harga_beli_3 Decimal @default(0)
+  harga_jual_1 Decimal @default(0)
+  harga_jual_2 Decimal @default(0)
+  harga_jual_3 Decimal @default(0)
+  barcode String @db.VarChar(100) @unique()
+  expired DateTime? @default(now())
+  diskon_rp Decimal @default(0)
+  diskon_persen Decimal @default(0)
+  jumlah_stok Decimal @default(0)
+  jumlah_awal Decimal @default(0)
+  keterangan String @db.Text
+  is_active Boolean @default(true)
+
+  @@map("barang")
+}
