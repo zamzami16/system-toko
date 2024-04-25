@@ -61,11 +61,9 @@ jobs:
         run: npm run generate:swagger
 
       - name: Generate Swagger UI
-        if: success()
-        uses: swagger-api/swagger-ui-action@v1
-        with:
-          spec-file: ./docs/swagger-spec.json
-          output: ./docs
+        run: npx swagger-ui-gen -o ./docs
+        env:
+          SWAGGER_JSON: ./docs/swagger-spec.json
 
       - name: Deploy to GitHub Pages
         if: success()
