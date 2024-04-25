@@ -55,10 +55,16 @@ jobs:
           DATABASE_URL: postgresql://test:test@localhost:5432/test
           PUBLIC_TOKEN: ba799c08-e47e-45f3-953e-81f66107dc73
           JWT_ACCESS_SECRET: f0f81d51-4e16-4fb7-b12f-ebf1a418c40c
-          JWT_REFRESH_SECRET: 1XKuhizo3Xspwutej7gyfZeM8RgjYrVFWEja/oAGe/3l8z3aIBzg7LX7wev6lcGLbS2pJe4O2wd65lUFiQfW+Y3IjrQhZLCcTV3x7z/tK32IZbxnH0YS+DNU1vroGCe9bNezgLg/JdqBkU4h/7xkie4CyNK0qLoP/RrxdXeXB2nSiTwznyNbqkufRyvDIuYbJ8ZfcBuRVz8CHdlGS1bjKTBLDPEN2upgZI6Ms7mPylRWCKcflfWj0DW22wAOOuOUocaZRKJ2rsi+yitVkXDAl4MmSojT43mM4F3zQGJx+iWbyxZx2bs41G0yN3MHIQcgl5/+fpzkbWjggj36P+cQwQ==
+          JWT_REFRESH_SECRET: 1XKuhizo3Xspwutej7gyfZeM8RgjY
 
       - name: Generate Swagger JSON
         run: npm run generate:swagger
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/test
+          PUBLIC_TOKEN: ba799c08-e47e-45f3-953e-81f66107dc73
+          JWT_ACCESS_SECRET: f0f81d51-4e16-4fb7-b12f-ebf1a418c40c
+          JWT_REFRESH_SECRET: 1XKuhizo3Xspwutej7gyfZeM8RgjY
+          GENERATE_SWAGGER: true
 
       - name: Generate Swagger UI
         run: npx swagger-ui-gen -o ./docs
