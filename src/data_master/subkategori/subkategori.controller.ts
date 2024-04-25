@@ -19,7 +19,7 @@ import {
 } from '../../model/data.master/subkategori.model';
 import { WebResponse } from '../../model/web.response';
 import { JenisBarang } from '@prisma/client';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 
 @ApiBearerAuth()
 @Controller('/api/subkategori')
@@ -79,6 +79,16 @@ export class SubkategoriController {
 
   @Get()
   @HttpCode(200)
+  @ApiQuery({ name: 'id', required: false })
+  @ApiQuery({ name: 'nama', required: false })
+  @ApiQuery({ name: 'page', required: false, example: 1 })
+  @ApiQuery({ name: 'size', required: false, example: 10 })
+  @ApiQuery({
+    name: 'jenisbarang',
+    required: false,
+    enum: JenisBarang,
+    isArray: false,
+  })
   async serach(
     @Query('id', new ParseIntPipe({ optional: true })) subkategori_id?: number,
     @Query('nama') nama?: string,

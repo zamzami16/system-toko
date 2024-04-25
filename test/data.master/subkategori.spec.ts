@@ -7,12 +7,13 @@ import { TestService } from '../test.service';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import * as request from 'supertest';
 import { JenisBarang } from '@prisma/client';
+import { Tokens } from '../../src/model/token.model';
 
 describe('Subkategori Controller', () => {
   let app: INestApplication;
   let logger: Logger;
   let testService: TestService;
-  let token: { access_token: string };
+  let token: Tokens;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({

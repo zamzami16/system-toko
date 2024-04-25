@@ -5,16 +5,18 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { jwtConstants } from './auth.constans';
 import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '../common/public.decorator';
+import { IS_REFRESH_TOKEN_KEY } from '../common/refresh.token.decorator';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
     private reflector: Reflector,
+    private configService: ConfigService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -32,9 +34,30 @@ export class AuthGuard implements CanActivate {
     if (!token) {
       throw new UnauthorizedException();
     }
+
+    const isRefreshToken = this.reflector.getAllAndOverride<boolean>(
+      IS_REFRESH_TOKEN_KEY,
+      [context.getHandler(), context.getClass()],
+    );
+
+    if (isRefreshToken) {
+      try {
+        const payload = await this.jwtService.verifyAsync(token, {
+          secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+        });
+        // 💡 We're assigning the payload to the request object here
+        // so that we can access it in our route handlers
+        payload['refresh_token'] = token;
+        request['user'] = payload;
+      } catch {
+        throw new UnauthorizedException();
+      }
+      return true;
+    }
+
     try {
       const payload = await this.jwtService.verifyAsync(token, {
-        secret: jwtConstants.SECRET,
+        secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
       });
       // 💡 We're assigning the payload to the request object here
       // so that we can access it in our route handlers
