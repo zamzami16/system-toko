@@ -67,9 +67,9 @@ jobs:
           GENERATE_SWAGGER: true
 
       - name: Generate Swagger UI
-        run: npx swagger-ui-gen -o ./docs
-        env:
-          SWAGGER_JSON: ./docs/swagger-spec.json
+        run: |
+          cp node_modules/swagger-ui-dist/swagger-ui* ./docs
+          sed -i 's#https://petstore.swagger.io/v2/swagger.json#/swagger-spec.json#g' ./docs/index.html
 
       - name: Deploy to GitHub Pages
         if: success()
