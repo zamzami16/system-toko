@@ -1,35 +1,58 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-
-name: Test API CI
+name: Integration Tests
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
-  build:
-
+  test:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: test
+        ports:
+          - 5432:5432
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v3
-      
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
       with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-        
-    - name: Install dependency
+        node-version: '18.x' # This will use the latest stable Node.js version
+
+    - name: Install dependencies
       run: npm ci
-      
-    - run: npm test
+
+    - name: Set up Prisma CLI
+      run: npm install prisma --save-dev
+
+    - name: Run Prisma migrations
+      run: npx prisma migrate deploy
+      env:
+        DATABASE_URL: postgresql://test:test@localhost:5432/test
+
+    - name: Run integration tests
+      run: npm run test:integration
+      env:
+        DATABASE_URL: postgresql://test:test@localhost:5432/test
+        PUBLIC_TOKEN: ba799c08-e47e-45f3-953e-81f66107dc73
+        JWT_ACCESS_SECRET: f0f81d51-4e16-4fb7-b12f-ebf1a418c40c
+        JWT_REFRESH_SECRET: 1XKuhizo3Xspwutej7gyfZeM8RgjYrVFWEja/oAGe/3l8z3aIBzg7LX7wev6lcGLbS2pJe4O2wd65lUFiQfW+Y3IjrQhZLCcTV3x7z/tK32IZbxnH0YS+DNU1vroGCe9bNezgLg/JdqBkU4h/7xkie4CyNK0qLoP/RrxdXeXB2nSiTwznyNbqkufRyvDIuYbJ8ZfcBuRVz8CHdlGS1bjKTBLDPEN2upgZI6Ms7mPylRWCKcflfWj0DW22wAOOuOUocaZRKJ2rsi+yitVkXDAl4MmSojT43mM4F3zQGJx+iWbyxZx2bs41G0yN3MHIQcgl5/+fpzkbWjggj36P+cQwQ==
+
