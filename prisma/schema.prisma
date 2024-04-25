@@ -23,7 +23,7 @@ enum JenisBarang {
 model User {
   username String @id @db.VarChar(50)
   password String @db.VarChar(200)
-  token String? @db.VarChar(100)
+  refresh_token String? @db.Text
   contact_id Int @unique()
   
   contact Contact @relation(fields: [contact_id],references: [id])

@@ -1,4 +1,9 @@
-import { HttpException, Inject, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { PrismaService } from '../common/prisma.service';
 import { ValidationService } from '../common/validation.service';
@@ -22,6 +27,38 @@ export class UserService {
         username: username,
       },
     });
+  }
+
+  async updateRefreshToken(username: string, refresh_token: string) {
+    const hashedRefreshToken = await bcrypt.hash(refresh_token, 10);
+    await this.prismaService.user.update({
+      data: {
+        refresh_token: hashedRefreshToken,
+      },
+      where: {
+        username: username,
+      },
+    });
+  }
+
+  async deleteRefreshToken(username: string): Promise<UserResponse> {
+    let user = await this.findFromUsername(username);
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+    user = await this.prismaService.user.update({
+      where: {
+        username: user.username,
+      },
+      data: {
+        refresh_token: null,
+      },
+    });
+
+    return {
+      username: user.username,
+      token: user.refresh_token,
+    };
   }
 
   async register(request: RegisterUserRequestDto): Promise<UserResponse> {
@@ -68,7 +105,7 @@ export class UserService {
 
     return {
       username: user.username,
-      token: user.token,
+      token: user.refresh_token,
     };
   }
 }
