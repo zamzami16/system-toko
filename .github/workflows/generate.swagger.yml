@@ -66,11 +66,6 @@ jobs:
           JWT_REFRESH_SECRET: 1XKuhizo3Xspwutej7gyfZeM8RgjY
           GENERATE_SWAGGER: true
 
-      - name: Generate Swagger UI
-        run: |
-          cp node_modules/swagger-ui-dist/swagger-ui* ./docs
-          sed -i 's#https://petstore.swagger.io/v2/swagger.json#/swagger-spec.json#g' ./docs/index.html
-
       - name: Deploy to GitHub Pages
         if: success()
         uses: peaceiris/actions-gh-pages@v3
