@@ -49,7 +49,7 @@ jobs:
         DATABASE_URL: postgresql://test:test@localhost:5432/test
 
     - name: Run integration tests
-      run: npm run test:integration
+      run: npm test
       env:
         DATABASE_URL: postgresql://test:test@localhost:5432/test
         PUBLIC_TOKEN: ba799c08-e47e-45f3-953e-81f66107dc73
