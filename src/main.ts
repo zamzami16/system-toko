@@ -22,6 +22,10 @@ async function bootstrap() {
 
   fs.writeFileSync('./docs/swagger-spec.json', JSON.stringify(document));
 
+  if (process.env.GENERATE_SWAGGER) {
+    process.exit();
+  }
+
   await app.listen(3000);
 }
 bootstrap();
