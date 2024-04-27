@@ -24,6 +24,10 @@ describe('Auth Controller', () => {
     testService = app.get(TestService);
   });
 
+  afterEach(async () => {
+    await testService.terminatePrisma();
+  });
+
   describe('POST /api/auth/login', () => {
     beforeEach(async () => {
       await testService.deleteUserTest();

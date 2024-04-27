@@ -12,8 +12,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('System Toko')
     .setDescription('The System Toko API')
-    .setVersion('1.0')
-    .addTag('Toko')
+    .setVersion('1.0.1')
     .addBearerAuth()
     .build();
 

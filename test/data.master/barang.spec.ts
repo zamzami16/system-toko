@@ -28,6 +28,10 @@ describe('Barang Controller', () => {
     await testService.recreatePropertiBarang();
   });
 
+  afterEach(async () => {
+    await testService.terminatePrisma();
+  });
+
   describe('POST /api/barang', () => {
     beforeEach(async () => {
       await testService.deleteBarangTest();
@@ -269,7 +273,7 @@ describe('Barang Controller', () => {
       expect(response.body.paging).toBeDefined();
       expect(response.body.paging.page).toBe(total_page + 1);
       expect(response.body.paging.size).toBe(size);
-      expect(response.body.paging.total_page).toBeGreaterThan(total_page);
+      expect(response.body.paging.total_page).toBe(total_page);
     });
 
     it('should be able to search barang with parameter nama not found', async () => {
@@ -304,7 +308,7 @@ describe('Barang Controller', () => {
       expect(response.body.paging).toBeDefined();
       expect(response.body.paging.page).toBe(1);
       expect(response.body.paging.size).toBe(10);
-      expect(response.body.paging.total_page).toBeGreaterThan(1);
+      expect(response.body.paging.total_page).toBeGreaterThan(0);
     });
 
     it('should be able to search barang with satuan paramater', async () => {

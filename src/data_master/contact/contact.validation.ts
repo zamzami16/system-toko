@@ -7,4 +7,30 @@ export class ContactValidation {
     email: z.string().email().min(1).optional(),
     no_hp: z.string().min(8).optional(),
   });
+
+  static readonly UPDATE: ZodType = z.object({
+    id: z.number().positive(),
+    nama: z.string().min(1).optional(),
+    alamat: z.string().min(1).optional(),
+    email: z.string().email().min(1).optional(),
+    no_hp: z.string().min(8).optional(),
+  });
+
+  static readonly SEARCH: ZodType = z.object({
+    nama: z.string().min(1).optional(),
+    alamat: z.string().min(1).optional(),
+    email: z.string().min(1).optional(),
+    no_hp: z.string().min(1).optional(),
+    page: z.number().positive(),
+    size: z.number().positive(),
+  });
+
+  static readonly SEARCH_QUERY: ZodType = z.object({
+    nama: z.string().min(1).optional(),
+    alamat: z.string().min(1).optional(),
+    email: z.string().min(1).optional(),
+    no_hp: z.string().min(1).optional(),
+    page: z.number().positive().optional(),
+    size: z.number().positive().optional(),
+  });
 }

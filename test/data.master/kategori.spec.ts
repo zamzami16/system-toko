@@ -26,6 +26,10 @@ describe('Kategori Controller', () => {
     token = await testService.createUserAndLoginTest();
   });
 
+  afterEach(async () => {
+    await testService.terminatePrisma();
+  });
+
   describe('POST /api/kategori', () => {
     beforeEach(async () => {
       await testService.recreatePropertiBarang();

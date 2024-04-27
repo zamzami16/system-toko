@@ -26,6 +26,10 @@ describe('Satuan Controller', () => {
     token = await testService.createUserAndLoginTest();
   });
 
+  afterEach(async () => {
+    await testService.terminatePrisma();
+  });
+
   describe('POST /api/satuan', () => {
     beforeEach(async () => {
       await testService.recreatePropertiBarang();

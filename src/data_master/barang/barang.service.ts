@@ -215,7 +215,7 @@ export class BarangService {
       },
     });
 
-    const skip = Math.ceil(searchRequest.size * (searchRequest.page - 1));
+    const skip = searchRequest.size * (searchRequest.page - 1);
     const barangs = await this.prismaService.barang.findMany({
       where: {
         AND: query,
@@ -229,7 +229,7 @@ export class BarangService {
       paging: {
         page: searchRequest.page,
         size: searchRequest.size,
-        total_page: total,
+        total_page: Math.ceil(total / searchRequest.size),
       },
     };
   }

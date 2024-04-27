@@ -23,6 +23,10 @@ describe('User Controller', () => {
     testService = app.get(TestService);
   });
 
+  afterEach(async () => {
+    await testService.terminatePrisma();
+  });
+
   describe('POST /api/users', () => {
     beforeEach(async () => {
       await testService.deleteUserTest();

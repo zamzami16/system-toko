@@ -17,6 +17,10 @@ export class TestService {
     private authService: AuthService,
   ) {}
 
+  async terminatePrisma() {
+    await this.prismaService.$disconnect();
+  }
+
   async deleteUserTest() {
     await this.prismaService.user.deleteMany({
       where: {
@@ -27,11 +31,15 @@ export class TestService {
 
   async createUserTest() {
     const password = await bcrypt.hash('test', 10);
-    let contact = await this.prismaService.contact.findFirst();
+    let contact = await this.prismaService.contact.findFirst({
+      where: {
+        nama: 'user',
+      },
+    });
     if (!contact) {
       contact = await this.prismaService.contact.create({
         data: {
-          nama: 'test',
+          nama: 'user',
         },
       });
     }
@@ -281,5 +289,56 @@ export class TestService {
 
   async getTotalBarang() {
     return await this.prismaService.barang.count();
+  }
+
+  async deleteContactTest() {
+    await this.prismaService.contact.deleteMany({
+      where: {
+        nama: {
+          contains: 'contact test',
+          mode: 'insensitive',
+        },
+      },
+    });
+  }
+
+  async createContactComplementTest(nama: string) {
+    const contact = await this.prismaService.contact.create({
+      data: {
+        nama: nama,
+      },
+    });
+    return contact;
+  }
+
+  async createContactMulti(total: number = 10) {
+    const contacts = [];
+    for (let i = 0; i < total; i++) {
+      contacts.push({
+        nama: 'Contact Multi Test ' + (i + 1),
+        alamat: 'Alamat ' + (i + 1),
+        email: `ContactMulti${i + 1}@test.com`,
+        no_hp: `${i + 1}89723662231`,
+      });
+    }
+
+    await this.prismaService.contact.createMany({
+      data: contacts,
+    });
+  }
+
+  async deleteContactMultiTest() {
+    await this.prismaService.contact.deleteMany({
+      where: {
+        nama: {
+          contains: 'Contact Multi Test',
+          mode: 'insensitive',
+        },
+      },
+    });
+  }
+
+  async createContactTest() {
+    return await this.createContactComplementTest('contact test');
   }
 }
