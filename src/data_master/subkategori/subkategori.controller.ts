@@ -19,8 +19,9 @@ import {
 } from '../../model/data.master/subkategori.model';
 import { WebResponse } from '../../model/web.response';
 import { JenisBarang } from '@prisma/client';
-import { ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 
+@ApiTags("Subkategori")
 @ApiBearerAuth()
 @Controller('/api/subkategori')
 export class SubkategoriController {

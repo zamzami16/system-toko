@@ -18,8 +18,9 @@ import {
   UpdateBarangRequest,
 } from '../../model/data.master/barang.model';
 import { WebResponse } from '../../model/web.response';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags("Barang")
 @ApiBearerAuth()
 @Controller('/api/barang')
 export class BarangController {

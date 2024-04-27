@@ -19,8 +19,9 @@ import {
 } from '../../model/data.master/kategori.model';
 import { WebResponse } from '../../model/web.response';
 import { JenisBarang } from '@prisma/client';
-import { ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Kategori')
 @ApiBearerAuth()
 @Controller('/api/kategori')
 export class KategoriController {

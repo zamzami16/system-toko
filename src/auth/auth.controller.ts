@@ -6,7 +6,9 @@ import { Public } from '../common/public.decorator';
 import { Tokens } from '../model/token.model';
 import { RefreshToken } from '../common/refresh.token.decorator';
 import { Auth } from '../common/auth.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Controller('/api/auth')
 export class AuthController {
   constructor(private authService: AuthService) {}

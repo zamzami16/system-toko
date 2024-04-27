@@ -13,7 +13,7 @@ async function bootstrap() {
     .setTitle('System Toko')
     .setDescription('The System Toko API')
     .setVersion('1.0')
-    .addTag('toko')
+    .addTag('Toko')
     .addBearerAuth()
     .build();
 
