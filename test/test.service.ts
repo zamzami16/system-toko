@@ -341,4 +341,92 @@ export class TestService {
   async createContactTest() {
     return await this.createContactComplementTest('contact test');
   }
+
+  async deleteSupplierTestInternal(nama: string) {
+    const deleteSupplier = this.prismaService.supplier.deleteMany({
+      where: {
+        contact: {
+          nama: {
+            contains: nama,
+            mode: 'insensitive',
+          },
+        },
+      },
+    });
+
+    const deleteContact = this.prismaService.contact.deleteMany({
+      where: {
+        nama: {
+          contains: nama,
+          mode: 'insensitive',
+        },
+      },
+    });
+
+    await this.prismaService.$transaction([deleteSupplier, deleteContact]);
+  }
+
+  async deleteSupplierTest() {
+    await this.deleteSupplierTestInternal('supplier test');
+  }
+
+  async deleteSupplierMultiTest() {
+    await this.deleteSupplierTestInternal('supplier multi test');
+  }
+
+  async createSupplierTest() {
+    const supplier = await this.prismaService.supplier.create({
+      data: {
+        max_hutang: 2_000_000_000,
+        saldo_awal_hutang: 2_000_000,
+        saldo_hutang: 5_000_000,
+        jatuh_tempo: 35,
+        contact: {
+          create: {
+            nama: 'supplier test',
+          },
+        },
+      },
+      include: {
+        contact: true,
+      },
+    });
+    return supplier;
+  }
+
+  async createSupplierMultiTest(total: number = 10) {
+    const inserts = [];
+    for (let i = 0; i < total; i++) {
+      const inc = i + 1;
+      inserts.push(
+        this.prismaService.supplier.create({
+          data: {
+            max_hutang: 2_000_000_000 * inc,
+            saldo_awal_hutang: 2_000_000 * inc,
+            saldo_hutang: 5_000_000 * inc,
+            jatuh_tempo: 35 * inc,
+            contact: {
+              create: {
+                nama: `supplier multi test ${inc}`,
+                alamat: 'Alamat ' + inc,
+                email: `ContactMulti${inc}@test.com`,
+                no_hp: `${inc}89723662`,
+              },
+            },
+          },
+        }),
+      );
+    }
+
+    const supplier = await this.prismaService.$transaction(inserts);
+    return supplier;
+  }
+
+  async createContactSupplierTest() {
+    return await this.prismaService.contact.create({
+      data: {
+        nama: 'supplier test',
+      },
+    });
+  }
 }

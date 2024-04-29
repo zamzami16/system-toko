@@ -38,6 +38,7 @@ model Contact {
   email String? @db.VarChar(500)
   no_hp String? @db.VarChar(20)
   user User?
+  supplier Supplier?
 
   @@map("contacts")
 }
@@ -103,4 +104,15 @@ model Barang {
   is_active Boolean @default(true)
 
   @@map("barang")
+}
+
+model Supplier {
+  contact_id Int @id()
+  contact Contact @relation(fields: [contact_id], references: [id])
+  saldo_hutang Decimal @default(0)
+  max_hutang Decimal @default(0)
+  saldo_awal_hutang Decimal @default(0)
+  jatuh_tempo Decimal @default(0)
+
+  @@map("suppliers")
 }
