@@ -67,6 +67,7 @@ model SatuanBarang {
   jenis_barang JenisBarang @default(Barang)
 
   barangs Barang[]
+  gudangs DetailGudang[]
   @@map("satuan_barang")
 }
 
@@ -103,6 +104,8 @@ model Barang {
   keterangan String @db.Text
   is_active Boolean @default(true)
 
+  gudangs DetailGudang[]
+
   @@map("barang")
 }
 
@@ -115,4 +118,32 @@ model Supplier {
   jatuh_tempo Decimal @default(0)
 
   @@map("suppliers")
+}
+
+model Gudang {
+  id Int @id() @default(autoincrement())
+  nama String @db.VarChar(500)
+  alamat String? @db.VarChar(500)
+  keterangan String? @db.Text
+  is_active Boolean @default(true) 
+
+  barangs DetailGudang[]
+
+  @@map("gudangs")
+}
+
+model DetailGudang {
+  barang_id Int
+  gudang_id Int
+  satuan_id Int
+  jumlah Decimal @default(0)
+  jumlah_minimal Decimal @default(0)
+  berat Decimal @default(0)
+
+  satuans SatuanBarang @relation(fields: [satuan_id], references: [id], onUpdate: Cascade)
+  barangs Barang @relation(fields: [barang_id], references: [id], onUpdate: Cascade)
+  gudangs Gudang @relation(fields: [gudang_id], references: [id], onUpdate: Cascade)
+
+  @@id([barang_id, gudang_id, satuan_id])
+  @@map("detail_gudangs")
 }
