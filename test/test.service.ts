@@ -429,4 +429,60 @@ export class TestService {
       },
     });
   }
+
+  async deleteGudangTest() {
+    await this.prismaService.gudang.deleteMany({
+      where: {
+        nama: {
+          contains: 'gudang test',
+        },
+      },
+    });
+  }
+
+  async createGudangTest() {
+    return await this.prismaService.gudang.create({
+      data: {
+        nama: 'gudang test',
+        alamat: 'jl. in aja dulu',
+        keterangan: 'gudang untuk test',
+        is_active: true,
+      },
+    });
+  }
+
+  async getGudangTest(gudang_id: number) {
+    return await this.prismaService.gudang.findUnique({
+      where: {
+        id: gudang_id,
+      },
+    });
+  }
+
+  async createGudangMultiTest(num: number = 10) {
+    const gudangs = [];
+    for (let i = 0; i < num; i++) {
+      const inc = i + 1;
+      gudangs.push({
+        nama: `gudang multi test ${inc}`,
+        alamat: `Alamat multi test ${inc}`,
+        keterangan: `Keterangan multi test`,
+        is_active: true,
+      });
+    }
+    await this.prismaService.gudang.createMany({
+      data: gudangs,
+    });
+  }
+
+  async deleteGudangMultiTest() {
+    await this.prismaService.gudang.deleteMany({
+      where: {
+        nama: {
+          contains: 'gudang multi test',
+          mode: 'insensitive',
+        },
+      },
+    });
+  }
 }
