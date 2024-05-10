@@ -3,7 +3,7 @@ import { PrismaService } from '../src/common/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { AuthService } from '../src/auth/auth.service';
 import { AuthSignIn } from '../src/model/auth.model';
-import { JenisBarang } from '@prisma/client';
+import { JenisBarang, JenisPajak } from '@prisma/client';
 import {
   CreateBarangRequest,
   UpdateBarangRequest,
@@ -291,11 +291,11 @@ export class TestService {
     return await this.prismaService.barang.count();
   }
 
-  async deleteContactTest() {
+  async deleteContactTest(nama: string = 'contact test') {
     await this.prismaService.contact.deleteMany({
       where: {
         nama: {
-          contains: 'contact test',
+          contains: nama,
           mode: 'insensitive',
         },
       },
@@ -483,6 +483,128 @@ export class TestService {
           mode: 'insensitive',
         },
       },
+    });
+  }
+
+  async deleteJenisPelangganTest(nama: string = 'jenis pelanggan test') {
+    await this.prismaService.jenisPelanggan.deleteMany({
+      where: {
+        nama: {
+          contains: nama,
+          mode: 'insensitive',
+        },
+      },
+    });
+  }
+
+  async createJenisPelangganTest(nama: string = 'jenis pelanggan test') {
+    return await this.prismaService.jenisPelanggan.create({
+      data: {
+        nama: nama,
+      },
+    });
+  }
+
+  async createJenisPelangganDefaultTest() {
+    return await this.prismaService.jenisPelanggan.create({
+      data: {
+        nama: 'jenis pelanggan test',
+        isDefault: true,
+      },
+    });
+  }
+
+  async createJenisPelangganMultiTest(total: number = 10) {
+    const jenisPelanggans = [];
+    for (let i = 0; i < total; i++) {
+      const inc = i + 1;
+      jenisPelanggans.push({
+        nama: `jenis pelanggan multi test ${inc}`,
+      });
+    }
+    await this.prismaService.jenisPelanggan.createMany({
+      data: jenisPelanggans,
+    });
+  }
+
+  async deleteJenisPelangganMultiTest() {
+    await this.prismaService.jenisPelanggan.deleteMany({
+      where: {
+        nama: {
+          contains: 'jenis pelanggan multi test',
+          mode: 'insensitive',
+        },
+      },
+    });
+  }
+
+  async deletePelangganTest(nama: string) {
+    await this.prismaService.pelanggan.deleteMany({
+      where: {
+        contact: {
+          nama: {
+            contains: nama,
+            mode: 'insensitive',
+          },
+        },
+      },
+    });
+  }
+
+  async recreatePelanggan(nama: string = 'jenis pelanggan pelanggan test') {
+    await this.deletePelangganTest(nama);
+    await this.deleteContactTest(nama);
+    await this.deleteJenisPelangganTest(nama);
+
+    const jenisPelanggan = await this.createJenisPelangganTest(nama);
+    const contact = await this.createContactComplementTest(nama);
+    return await this.prismaService.pelanggan.create({
+      data: {
+        jenisPelangganId: jenisPelanggan.id,
+        isCanCredit: true,
+        saldoPiutang: 0,
+        maxPiutang: 2_000_000,
+        limitHariPiutang: 30,
+        jatuhTempo: 60,
+        jenisPajak: JenisPajak.Inclusive,
+        contactId: contact.id,
+      },
+    });
+  }
+
+  async isPelangganExists(contactId: number) {
+    return await this.prismaService.pelanggan.findUnique({
+      where: {
+        contactId: contactId,
+      },
+    });
+  }
+
+  async recreatePelangganMultiTest(num: number = 10) {
+    const pelanggan = 'pelanggan multi test';
+    await this.deletePelangganTest(pelanggan);
+    await this.deleteContactTest(pelanggan);
+    await this.deleteJenisPelangganTest(pelanggan);
+
+    const jenisPelanggan = await this.createJenisPelangganTest(pelanggan);
+    const multi = [];
+    for (let i = 0; i < num; i++) {
+      const contact = await this.createContactComplementTest(
+        pelanggan + ' ' + i,
+      );
+      multi.push({
+        jenisPelangganId: jenisPelanggan.id,
+        isCanCredit: i % 2 === 0,
+        saldoPiutang: 0,
+        maxPiutang: 2_000_000 * i,
+        limitHariPiutang: 30 * i,
+        jatuhTempo: 60 * i,
+        jenisPajak: JenisPajak.Inclusive,
+        contactId: contact.id,
+      });
+    }
+    await this.prismaService.pelanggan.createMany({
+      data: multi,
     });
   }
 }

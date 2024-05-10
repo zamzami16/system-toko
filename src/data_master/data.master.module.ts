@@ -13,6 +13,10 @@ import { SupplierController } from './supplier/supplier.controller';
 import { ContactModule } from './contact/contact.module';
 import { GudangService } from './gudang/gudang.service';
 import { GudangController } from './gudang/gudang.controller';
+import { JenisPelangganService } from './jenis.pelanggan/jenis.pelanggan.service';
+import { JenisPelangganController } from './jenis.pelanggan/jenis.pelanggan.controller';
+import { PelangganService } from './pelanggan/pelanggan.service';
+import { PelangganController } from './pelanggan/pelanggan.controller';
 
 @Module({
   imports: [CommonModule, ContactModule],
@@ -23,6 +27,8 @@ import { GudangController } from './gudang/gudang.controller';
     BarangService,
     SupplierService,
     GudangService,
+    JenisPelangganService,
+    PelangganService,
   ],
   controllers: [
     KategoriController,
@@ -31,6 +37,8 @@ import { GudangController } from './gudang/gudang.controller';
     BarangController,
     SupplierController,
     GudangController,
+    JenisPelangganController,
+    PelangganController,
   ],
   exports: [
     SubkategoriService,
@@ -39,6 +47,8 @@ import { GudangController } from './gudang/gudang.controller';
     BarangService,
     SupplierService,
     GudangService,
+    JenisPelangganService,
+    PelangganService,
   ],
 })
 export class DataMasterModule {}

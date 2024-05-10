@@ -13,7 +13,7 @@ import {
   AlreadyExistsError,
   NotFoundError,
 } from '../../common/toko.exceptions';
-import { WebResponse } from '@src/model/web.response';
+import { WebResponse } from '../../model/web.response';
 
 @Injectable()
 export class ContactService {
@@ -32,13 +32,16 @@ export class ContactService {
     };
   }
 
-  async getContactOr404(contact_id: number): Promise<Contact> {
-    const contact = await this.prismaService.contact.findUnique({
+  async getContactById(contactId: number) {
+    return await this.prismaService.contact.findUnique({
       where: {
-        id: contact_id,
+        id: contactId,
       },
     });
+  }
 
+  async getContactOr404(contact_id: number): Promise<Contact> {
+    const contact = await this.getContactById(contact_id);
     if (!contact) {
       throw new NotFoundError();
     }
