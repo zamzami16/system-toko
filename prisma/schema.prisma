@@ -39,6 +39,7 @@ model Contact {
   no_hp String? @db.VarChar(20)
   user User?
   supplier Supplier?
+  pelanggan Pelanggan?
 
   @@map("contacts")
 }
@@ -146,4 +147,37 @@ model DetailGudang {
 
   @@id([barang_id, gudang_id, satuan_id])
   @@map("detail_gudangs")
+}
+
+model JenisPelanggan {
+  id Int @id @default(autoincrement())
+  nama String @db.VarChar(200) @unique()
+  isDefault Boolean @db.Boolean @default(false)
+
+  pelanggans Pelanggan[]
+
+  @@map("jenis_pelanggans")
+}
+
+enum JenisPajak {
+  None
+  Inclusive
+  Exclusive
+}
+
+model Pelanggan {
+  contactId Int @id
+  jenisPelangganId Int
+  isCanCredit Boolean @default(false)
+  saldoPiutang Decimal @default(0)
+  maxPiutang Decimal @default(0)
+  saldoAwalPiutang Decimal @default(0)
+  limitHariPiutang Int @default(0)
+  jatuhTempo Int @default(0)
+  jenisPajak JenisPajak @default(None)
+
+  contact Contact @relation(fields: [contactId], references: [id], onUpdate: Cascade)
+  jenisPelanggan JenisPelanggan @relation(fields: [jenisPelangganId], references: [id], onUpdate: Cascade)
+
+  @@map("pelanggans")
 }

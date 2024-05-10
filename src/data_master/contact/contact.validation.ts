@@ -25,12 +25,12 @@ export class ContactValidation {
     size: z.number().positive(),
   });
 
-  static readonly SEARCH_QUERY: ZodType = z.object({
+  static readonly SEARCH_SCHEMA = z.object({
     nama: z.string().min(1).optional(),
     alamat: z.string().min(1).optional(),
     email: z.string().min(1).optional(),
     no_hp: z.string().min(1).optional(),
-    page: z.number().positive().optional(),
-    size: z.number().positive().optional(),
+    page: z.number().positive(),
+    size: z.number().positive(),
   });
 }
