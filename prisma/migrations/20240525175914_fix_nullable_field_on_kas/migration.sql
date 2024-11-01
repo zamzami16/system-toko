@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Kas" ALTER COLUMN "nomorRekening" DROP NOT NULL,
+ALTER COLUMN "pemilik" DROP NOT NULL,
+ALTER COLUMN "keterangan" DROP NOT NULL;

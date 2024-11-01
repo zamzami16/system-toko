@@ -3,12 +3,19 @@ import { PrismaService } from '../src/common/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { AuthService } from '../src/auth/auth.service';
 import { AuthSignIn } from '../src/model/auth.model';
-import { JenisBarang, JenisPajak } from '@prisma/client';
+import {
+  JenisBarang,
+  JenisPajak,
+  Kas,
+  StatusArusKas,
+  TypeAkun,
+} from '@prisma/client';
 import {
   CreateBarangRequest,
   UpdateBarangRequest,
 } from '../src/model/data.master/barang.model';
 import { randomUUID } from 'crypto';
+import { TypeKas } from '../src/model/akun.model';
 
 @Injectable()
 export class TestService {
@@ -605,6 +612,91 @@ export class TestService {
     }
     await this.prismaService.pelanggan.createMany({
       data: multi,
+    });
+  }
+
+  async deleteKasTest() {
+    await this.prismaService.$transaction(async (tx) => {
+      const kas = await tx.kas.findMany({
+        where: {
+          nama: {
+            contains: 'kas test',
+            mode: 'insensitive',
+          },
+        },
+        select: { kodeAkun: true, kodeAkunKartuKredit: true },
+      });
+
+      if (kas.length > 0) {
+        await tx.kas.deleteMany({
+          where: {
+            nama: {
+              contains: 'kas test',
+              mode: 'insensitive',
+            },
+          },
+        });
+
+        // Filter out any null or undefined kodeAkun or kodeAkunKartuKredit
+        const validKas = kas.filter((k) => k.kodeAkun || k.kodeAkunKartuKredit);
+
+        const akunConditions = validKas
+          .flatMap((k) => [
+            k.kodeAkun ? { kode: k.kodeAkun } : null,
+            k.kodeAkunKartuKredit ? { kode: k.kodeAkunKartuKredit } : null,
+          ])
+          .filter(Boolean); // Remove null values
+
+        if (akunConditions.length > 0) {
+          await tx.akun.deleteMany({
+            where: {
+              OR: akunConditions,
+            },
+          });
+        }
+      }
+    });
+  }
+
+  async isAkunExists(kode: string) {
+    return await this.prismaService.akun.findUnique({
+      where: {
+        kode: kode,
+      },
+    });
+  }
+
+  async createKasTest(namaKas: string = 'kas test 1'): Promise<Kas> {
+    const nama = namaKas;
+    const candidateCode = `11${TypeKas.Kas}`;
+
+    return await this.prismaService.$transaction(async (tx) => {
+      const count = await tx.akun.count({
+        where: { kode: { startsWith: candidateCode } },
+      });
+      const kode = `${candidateCode}${(count + 1).toString().padStart(2, '0')}`;
+
+      // Create akun entry
+      const akun = await tx.akun.create({
+        data: {
+          kode,
+          nama,
+          levelAkun: 2,
+          typeAkun: TypeAkun.AkunKas,
+          statusArusKas: StatusArusKas.KasOperasional,
+        },
+      });
+
+      // Create kas entry linked to akun
+      return tx.kas.create({
+        data: {
+          nama,
+          akun: { connect: { kode: akun.kode } },
+          saldoKas: 0,
+          keterangan: 'kas test',
+          isActive: true,
+        },
+      });
     });
   }
 }

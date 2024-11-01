@@ -5,6 +5,8 @@ import { AuthModule } from './auth/auth.module';
 import { DataMasterModule } from './data_master/data.master.module';
 import { ContactModule } from './data_master/contact/contact.module';
 import { HealthModule } from './health/health.module';
+import { AkunModule } from './akun/akun.module';
+import { KasModule } from './kas/kas.module';
 
 @Module({
   imports: [
@@ -14,6 +16,8 @@ import { HealthModule } from './health/health.module';
     DataMasterModule,
     ContactModule,
     HealthModule,
+    KasModule,
+    AkunModule,
   ],
   controllers: [],
   providers: [],
