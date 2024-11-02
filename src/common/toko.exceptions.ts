@@ -11,3 +11,9 @@ export class NotFoundError extends HttpException {
     super(message, 404);
   }
 }
+
+export class AlreadyUsedForOtherDataError extends HttpException {
+  constructor(message: string = 'Already used for other data') {
+    super(message, 400);
+  }
+}
