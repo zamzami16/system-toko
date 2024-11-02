@@ -38,7 +38,7 @@ export class AuthController {
   async refresh(@Auth() user) {
     const result = await this.authService.refreshToken(
       user.username,
-      user.refresh_token,
+      user.refreshToken,
     );
     return {
       data: result,

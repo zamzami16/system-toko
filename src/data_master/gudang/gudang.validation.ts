@@ -5,7 +5,7 @@ export class GudangValidation {
     nama: z.string().min(1),
     alamat: z.string().optional(),
     keterangan: z.string().optional(),
-    is_active: z.boolean().default(true),
+    isActive: z.boolean().default(true),
   });
 
   static readonly UPDATE: ZodType = z.object({
@@ -13,14 +13,14 @@ export class GudangValidation {
     nama: z.string().min(1).optional(),
     alamat: z.string().optional(),
     keterangan: z.string().optional(),
-    is_active: z.boolean().default(true),
+    isActive: z.boolean().default(true),
   });
 
   static readonly SEARCH: ZodType = z.object({
     nama: z.string().optional(),
     alamat: z.string().optional(),
     keterangan: z.string().optional(),
-    is_active: z.boolean().optional(),
+    isActive: z.boolean().optional(),
     page: z.number().min(1),
     size: z.number().min(1),
   });

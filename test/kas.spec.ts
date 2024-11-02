@@ -14,7 +14,7 @@ describe('Kas Controller', () => {
   let app: INestApplication;
   let logger: Logger;
   let testService: TestService;
-  let token: { access_token: string };
+  let token: { accessToken: string };
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -47,7 +47,7 @@ describe('Kas Controller', () => {
       };
       const response = await request(app.getHttpServer())
         .post('/api/kas')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send(kasData);
 
       logger.info(JSON.stringify(response.body));
@@ -71,7 +71,7 @@ describe('Kas Controller', () => {
       };
       const response = await request(app.getHttpServer())
         .post('/api/kas')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send(kasData);
 
       logger.info(JSON.stringify(response.body));
@@ -96,7 +96,7 @@ describe('Kas Controller', () => {
       };
       const response = await request(app.getHttpServer())
         .post('/api/kas')
-        .set('Authorization', `Bearer ${token.access_token}invalid`)
+        .set('Authorization', `Bearer ${token.accessToken}invalid`)
         .send(kasData);
 
       logger.info(JSON.stringify(response.body));
@@ -114,7 +114,7 @@ describe('Kas Controller', () => {
       };
       const response = await request(app.getHttpServer())
         .post('/api/kas')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send(kasData);
 
       logger.info(JSON.stringify(response.body));
@@ -147,7 +147,7 @@ describe('Kas Controller', () => {
     it('should be able to update kas', async () => {
       const response = await request(app.getHttpServer())
         .put('/api/kas/' + kas.id)
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send(updateKasRequest);
 
       logger.info(JSON.stringify(response.body));
@@ -167,7 +167,7 @@ describe('Kas Controller', () => {
     it('should reject update kas if token invalid', async () => {
       const response = await request(app.getHttpServer())
         .put(`/api/kas/` + kas.id)
-        .set('Authorization', `Bearer ${token.access_token}invalid`)
+        .set('Authorization', `Bearer ${token.accessToken}invalid`)
         .send(updateKasRequest);
 
       logger.info(JSON.stringify(response.body));
@@ -181,7 +181,7 @@ describe('Kas Controller', () => {
       updateKasRequest.id++;
       const response = await request(app.getHttpServer())
         .put(`/api/kas/` + (kas.id + 1))
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send(updateKasRequest);
       logger.info(JSON.stringify(response.body));
 
@@ -201,7 +201,7 @@ describe('Kas Controller', () => {
     it('should be able to find kas by id', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/kas/' + kas.id)
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
 
@@ -216,7 +216,7 @@ describe('Kas Controller', () => {
     it('should reject get kas if token invalid', async () => {
       const response = await request(app.getHttpServer())
         .get(`/api/kas/` + kas.id)
-        .set('Authorization', `Bearer ${token.access_token}invalid`);
+        .set('Authorization', `Bearer ${token.accessToken}invalid`);
 
       logger.info(JSON.stringify(response.body));
 
@@ -228,7 +228,7 @@ describe('Kas Controller', () => {
     it('should reject get kas if kas not found', async () => {
       const response = await request(app.getHttpServer())
         .get(`/api/kas/` + (kas.id + 1))
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
 
@@ -247,7 +247,7 @@ describe('Kas Controller', () => {
     it('should be able to find kas', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/kas')
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
 
@@ -262,7 +262,7 @@ describe('Kas Controller', () => {
     it('should be able to find kas by name', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/kas')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           name: 'gaada',
         });
@@ -280,7 +280,7 @@ describe('Kas Controller', () => {
     it('should be able to find kas by status aktif', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/kas')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           isActive: false,
         });
@@ -306,7 +306,7 @@ describe('Kas Controller', () => {
     it('should be able to delete kas', async () => {
       const response = await request(app.getHttpServer())
         .delete('/api/kas/' + kas.id)
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
 
@@ -329,7 +329,7 @@ describe('Kas Controller', () => {
     it('should reject delete kas if token invalid', async () => {
       const response = await request(app.getHttpServer())
         .delete(`/api/kas/` + kas.id)
-        .set('Authorization', `Bearer ${token.access_token}invalid`);
+        .set('Authorization', `Bearer ${token.accessToken}invalid`);
 
       logger.info(JSON.stringify(response.body));
 
@@ -341,7 +341,7 @@ describe('Kas Controller', () => {
     it('should reject get kas if kas not found', async () => {
       const response = await request(app.getHttpServer())
         .delete(`/api/kas/` + (kas.id + 1))
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
 

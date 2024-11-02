@@ -48,10 +48,10 @@ export class SatuanController {
    * @param satuanId The Id of Kategori to be get
    * @returns Kategori data
    */
-  @Get('/:satuan_id')
+  @Get('/:satuanId')
   @HttpCode(200)
   async get(
-    @Param('satuan_id', ParseIntPipe) satuanId: number,
+    @Param('satuanId', ParseIntPipe) satuanId: number,
   ): Promise<WebResponse<SatuanResponse>> {
     const result = await this.satuanService.get(satuanId);
     return {
@@ -65,10 +65,10 @@ export class SatuanController {
    * @param request The request body containing Kategori data tobe updated
    * @returns A WebResponse containing updated data
    */
-  @Put('/:satuan_id')
+  @Put('/:satuanId')
   @HttpCode(200)
   async update(
-    @Param('satuan_id', ParseIntPipe) satuanId: number,
+    @Param('satuanId', ParseIntPipe) satuanId: number,
     @Body() request: UpdateSatuanRequest,
   ): Promise<WebResponse<SatuanResponse>> {
     request.id = satuanId;
@@ -91,9 +91,9 @@ export class SatuanController {
     isArray: false,
   })
   async serach(
-    @Query('id', new ParseIntPipe({ optional: true })) satuan_id?: number,
+    @Query('id', new ParseIntPipe({ optional: true })) satuanId?: number,
     @Query('nama') nama?: string,
-    @Query('jenisbarang') jenis_barang?: JenisBarang,
+    @Query('jenisbarang') jenisBarang?: JenisBarang,
     @Query('page', new ParseIntPipe({ optional: true }))
     page?: number,
     @Query('size', new ParseIntPipe({ optional: true })) size?: number,
@@ -101,19 +101,19 @@ export class SatuanController {
     const request: SearchSatuanRequest = {
       page: page || 1,
       size: size || 10,
-      id: satuan_id,
+      id: satuanId,
       nama: nama,
-      jenis_barang: jenis_barang || JenisBarang.Barang,
+      jenisBarang: jenisBarang || JenisBarang.Barang,
     };
 
     const result = await this.satuanService.search(request);
     return result;
   }
 
-  @Delete('/:satuan_id')
+  @Delete('/:satuanId')
   @HttpCode(200)
-  async remove(@Param('satuan_id', ParseIntPipe) satuan_id: number) {
-    const result = await this.satuanService.remove(satuan_id);
+  async remove(@Param('satuanId', ParseIntPipe) satuanId: number) {
+    const result = await this.satuanService.remove(satuanId);
     return {
       data: result,
     };

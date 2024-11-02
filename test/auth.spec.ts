@@ -46,8 +46,8 @@ describe('Auth Controller', () => {
       expect(response.status).toBe(200);
       expect(response.body.data).toBeDefined();
       expect(response.body.errors).toBeUndefined();
-      expect(response.body.data.access_token).toBeDefined();
-      expect(response.body.data.refresh_token).toBeDefined();
+      expect(response.body.data.accessToken).toBeDefined();
+      expect(response.body.data.refreshToken).toBeDefined();
     });
 
     it('should can not login', async () => {
@@ -74,20 +74,20 @@ describe('Auth Controller', () => {
     it('should can refersh token', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/auth/refresh')
-        .set('Authorization', `Bearer ${token.refresh_token}`);
+        .set('Authorization', `Bearer ${token.refreshToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(200);
       expect(response.body.data).toBeDefined();
       expect(response.body.errors).toBeUndefined();
-      expect(response.body.data.access_token).toBeDefined();
-      expect(response.body.data.refresh_token).toBeDefined();
+      expect(response.body.data.accessToken).toBeDefined();
+      expect(response.body.data.refreshToken).toBeDefined();
     });
 
     it('should reject if refresh token invalid', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/auth/refresh')
-        .set('Authorization', `Bearer ${token.refresh_token}salah`);
+        .set('Authorization', `Bearer ${token.refreshToken}salah`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(401);
@@ -105,20 +105,20 @@ describe('Auth Controller', () => {
     it('should can logout', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/auth/logout')
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(200);
       expect(response.body.data).toBeDefined();
       expect(response.body.errors).toBeUndefined();
-      expect(response.body.data.access_token).toBe('');
-      expect(response.body.data.refresh_token).toBe('');
+      expect(response.body.data.accessToken).toBe('');
+      expect(response.body.data.refreshToken).toBe('');
     });
 
     it('should can reject if token invalid', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/auth/logout')
-        .set('Authorization', `Bearer ${token.access_token}salah`);
+        .set('Authorization', `Bearer ${token.accessToken}salah`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(401);

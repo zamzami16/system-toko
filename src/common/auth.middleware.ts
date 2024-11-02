@@ -11,7 +11,7 @@ export class AuthMiddleWare implements NestMiddleware {
     if (token) {
       const user = await this.prismaService.user.findFirst({
         where: {
-          refresh_token: token,
+          refreshToken: token,
         },
       });
 

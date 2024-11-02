@@ -141,7 +141,7 @@ export class JenisPelangganService {
       paging: {
         page: searchRequest.page,
         size: searchRequest.size,
-        total_page: Math.ceil(total / searchRequest.size),
+        totalPage: Math.ceil(total / searchRequest.size),
       },
     };
   }

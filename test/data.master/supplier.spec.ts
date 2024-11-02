@@ -12,7 +12,7 @@ describe('Barang Controller', () => {
   let app: INestApplication;
   let logger: Logger;
   let testService: TestService;
-  let token: { access_token: string };
+  let token: { accessToken: string };
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -41,7 +41,7 @@ describe('Barang Controller', () => {
     it('should can create new supplier', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/suppliers')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           contact: {
             nama: 'supplier test',
@@ -58,9 +58,9 @@ describe('Barang Controller', () => {
       const contact = await testService.createContactSupplierTest();
       const response = await request(app.getHttpServer())
         .post('/api/suppliers')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
-          contact_id: contact.id,
+          contactId: contact.id,
         });
 
       logger.info(JSON.stringify(response.body));
@@ -73,9 +73,9 @@ describe('Barang Controller', () => {
       const contact = await testService.createContactSupplierTest();
       const response = await request(app.getHttpServer())
         .post('/api/suppliers')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
-          contact_id: contact.id + 1,
+          contactId: contact.id + 1,
         });
 
       logger.info(JSON.stringify(response.body));
@@ -88,7 +88,7 @@ describe('Barang Controller', () => {
       const contact = await testService.createContactSupplierTest();
       const response = await request(app.getHttpServer())
         .post('/api/suppliers')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           contact: {
             nama: contact.nama,
@@ -104,7 +104,7 @@ describe('Barang Controller', () => {
     it('should reject if token invalid', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/suppliers')
-        .set('Authorization', `Bearer ${token.access_token}salah`)
+        .set('Authorization', `Bearer ${token.accessToken}salah`)
         .send({
           contact: {
             nama: 'supplier test',
@@ -118,7 +118,7 @@ describe('Barang Controller', () => {
     });
   });
 
-  describe('DELETE /api/suppliers/:contact_id', () => {
+  describe('DELETE /api/suppliers/:contactId', () => {
     let supplier: Supplier;
     beforeEach(async () => {
       token = await testService.createUserAndLoginTest();
@@ -128,8 +128,8 @@ describe('Barang Controller', () => {
 
     it('should can delete supplier', async () => {
       const response = await request(app.getHttpServer())
-        .delete('/api/suppliers/' + supplier.contact_id)
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .delete('/api/suppliers/' + supplier.contactId)
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(200);
@@ -139,8 +139,8 @@ describe('Barang Controller', () => {
 
     it('should reject if supplier does not exists', async () => {
       const response = await request(app.getHttpServer())
-        .get('/api/suppliers/' + (supplier.contact_id + 1))
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .get('/api/suppliers/' + (supplier.contactId + 1))
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(404);
@@ -150,8 +150,8 @@ describe('Barang Controller', () => {
 
     it('should reject if token invalid', async () => {
       const response = await request(app.getHttpServer())
-        .get('/api/suppliers/' + supplier.contact_id)
-        .set('Authorization', `Bearer ${token.access_token}salah`);
+        .get('/api/suppliers/' + supplier.contactId)
+        .set('Authorization', `Bearer ${token.accessToken}salah`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(401);
@@ -160,7 +160,7 @@ describe('Barang Controller', () => {
     });
   });
 
-  describe('PUT /api/suppliers/:contact_id', () => {
+  describe('PUT /api/suppliers/:contactId', () => {
     let supplier: Supplier;
     beforeEach(async () => {
       token = await testService.createUserAndLoginTest();
@@ -170,27 +170,27 @@ describe('Barang Controller', () => {
 
     it('should can update supplier', async () => {
       const response = await request(app.getHttpServer())
-        .put('/api/suppliers/' + supplier.contact_id)
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .put('/api/suppliers/' + supplier.contactId)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
-          contact_id: supplier.contact_id,
-          saldo_hutang: 2_000_000,
+          contactId: supplier.contactId,
+          saldoHutang: 2_000_000,
         });
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(200);
       expect(response.body.data).toBeDefined();
       expect(response.body.errors).toBeUndefined();
-      expect(response.body.data.saldo_hutang).toBe(2_000_000);
+      expect(response.body.data.saldoHutang).toBe(2_000_000);
     });
 
     it('should reject if supplier does not exists', async () => {
       const response = await request(app.getHttpServer())
-        .put('/api/suppliers/' + (supplier.contact_id + 1))
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .put('/api/suppliers/' + (supplier.contactId + 1))
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
-          contact_id: supplier.contact_id,
-          saldo_hutang: 2_000_000,
+          contactId: supplier.contactId,
+          saldoHutang: 2_000_000,
         });
 
       logger.info(JSON.stringify(response.body));
@@ -201,11 +201,11 @@ describe('Barang Controller', () => {
 
     it('should reject if token invalid', async () => {
       const response = await request(app.getHttpServer())
-        .get('/api/suppliers/' + supplier.contact_id)
-        .set('Authorization', `Bearer ${token.access_token}salah`)
+        .get('/api/suppliers/' + supplier.contactId)
+        .set('Authorization', `Bearer ${token.accessToken}salah`)
         .send({
-          contact_id: supplier.contact_id,
-          saldo_hutang: 2_000_000,
+          contactId: supplier.contactId,
+          saldoHutang: 2_000_000,
         });
 
       logger.info(JSON.stringify(response.body));
@@ -227,7 +227,7 @@ describe('Barang Controller', () => {
       await testService.createSupplierMultiTest();
       const response = await request(app.getHttpServer())
         .get('/api/suppliers')
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(200);
@@ -239,7 +239,7 @@ describe('Barang Controller', () => {
     it('should reject if token invalid', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/suppliers')
-        .set('Authorization', `Bearer ${token.access_token}salah`);
+        .set('Authorization', `Bearer ${token.accessToken}salah`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(401);
@@ -251,7 +251,7 @@ describe('Barang Controller', () => {
       await testService.createSupplierMultiTest(10);
       const response = await request(app.getHttpServer())
         .get('/api/suppliers')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           nama: 'multi',
         });
@@ -267,7 +267,7 @@ describe('Barang Controller', () => {
       await testService.createSupplierMultiTest(10);
       const response = await request(app.getHttpServer())
         .get('/api/suppliers')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           nama: 'tidak ada',
         });
@@ -279,13 +279,13 @@ describe('Barang Controller', () => {
       expect(response.body.data.length).toBe(0);
     });
 
-    it('should can search supplier with no_hp query', async () => {
+    it('should can search supplier with noHp query', async () => {
       await testService.createSupplierMultiTest(10);
       const response = await request(app.getHttpServer())
         .get('/api/suppliers')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
-          no_hp: '89723662',
+          noHp: '89723662',
         });
 
       logger.info(JSON.stringify(response.body));
@@ -299,7 +299,7 @@ describe('Barang Controller', () => {
       await testService.createSupplierMultiTest(10);
       const response = await request(app.getHttpServer())
         .get('/api/suppliers')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           alamat: 'Alamat',
         });
@@ -315,7 +315,7 @@ describe('Barang Controller', () => {
       await testService.createSupplierMultiTest(10);
       const response = await request(app.getHttpServer())
         .get('/api/suppliers')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           email: '@test.com',
         });
@@ -331,12 +331,12 @@ describe('Barang Controller', () => {
       await testService.createSupplierMultiTest(10);
       const response = await request(app.getHttpServer())
         .get('/api/suppliers')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           nama: 'multi',
           email: '@test.com',
           alamat: 'Alamat',
-          no_hp: '89723662',
+          noHp: '89723662',
           size: 5,
           page: 2,
         });
@@ -347,7 +347,7 @@ describe('Barang Controller', () => {
       expect(response.body.errors).toBeUndefined();
       expect(response.body.data.length).toBe(5);
       expect(response.body.paging).toBeDefined();
-      expect(response.body.paging.total_page).toBe(2);
+      expect(response.body.paging.totalPage).toBe(2);
     });
   });
 });

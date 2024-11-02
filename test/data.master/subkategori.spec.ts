@@ -40,10 +40,10 @@ describe('Subkategori Controller', () => {
     it('should be able to create subkategori', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/subkategori')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           nama: 'test',
-          jenis_barang: JenisBarang.Barang,
+          jenisBarang: JenisBarang.Barang,
         });
 
       logger.info(JSON.stringify(response.body));
@@ -51,16 +51,16 @@ describe('Subkategori Controller', () => {
       expect(response.body.data).toBeDefined();
       expect(response.body.errors).toBeUndefined();
       expect(response.body.data.nama).toBe('test');
-      expect(response.body.data.jenis_barang).toBe(JenisBarang.Barang);
+      expect(response.body.data.jenisBarang).toBe(JenisBarang.Barang);
     });
 
     it('should reject if token wrong', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/subkategori')
-        .set('Authorization', `Bearer ${token.access_token}salah`)
+        .set('Authorization', `Bearer ${token.accessToken}salah`)
         .send({
           nama: 'test',
-          jenis_barang: JenisBarang.Barang,
+          jenisBarang: JenisBarang.Barang,
         });
 
       logger.info(JSON.stringify(response.body));
@@ -71,10 +71,10 @@ describe('Subkategori Controller', () => {
     it('should reject if data invalid', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/subkategori')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           nama: '',
-          jenis_barang: JenisBarang.Barang,
+          jenisBarang: JenisBarang.Barang,
         });
 
       logger.info(JSON.stringify(response.body));
@@ -85,10 +85,10 @@ describe('Subkategori Controller', () => {
     it('should reject if jenis barang invalid', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/subkategori')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           nama: 'test',
-          jenis_barang: 'Beruang',
+          jenisBarang: 'Beruang',
         });
 
       logger.info(JSON.stringify(response.body));
@@ -100,10 +100,10 @@ describe('Subkategori Controller', () => {
       await testService.createSubkategoriTest();
       const response = await request(app.getHttpServer())
         .post('/api/subkategori')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           nama: 'test',
-          jenis_barang: JenisBarang.Barang,
+          jenisBarang: JenisBarang.Barang,
         });
 
       logger.info(JSON.stringify(response.body));
@@ -112,7 +112,7 @@ describe('Subkategori Controller', () => {
     });
   });
 
-  describe('GET /api/subkategori/:subkategori_id', () => {
+  describe('GET /api/subkategori/:subkategoriId', () => {
     beforeEach(async () => {
       await testService.recreatePropertiBarang();
     });
@@ -121,7 +121,7 @@ describe('Subkategori Controller', () => {
       const subkategori = await testService.getSubkategoriTest();
       const response = await request(app.getHttpServer())
         .get('/api/subkategori/' + subkategori.id)
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(200);
@@ -129,14 +129,14 @@ describe('Subkategori Controller', () => {
       expect(response.body.errors).toBeUndefined();
       expect(response.body.data.id).toBe(subkategori.id);
       expect(response.body.data.nama).toBe(subkategori.nama);
-      expect(response.body.data.jenis_barang).toBe(subkategori.jenis_barang);
+      expect(response.body.data.jenisBarang).toBe(subkategori.jenisBarang);
     });
 
     it('should reject if token wrong', async () => {
       const kategori = await testService.getSubkategoriTest();
       const response = await request(app.getHttpServer())
         .get('/api/subkategori/' + kategori.id)
-        .set('Authorization', `Bearer ${token.access_token}salah`);
+        .set('Authorization', `Bearer ${token.accessToken}salah`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(401);
@@ -147,7 +147,7 @@ describe('Subkategori Controller', () => {
       const kategori = await testService.getSubkategoriTest();
       const response = await request(app.getHttpServer())
         .get('/api/subkategori/' + (kategori.id + 1))
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(404);
@@ -155,7 +155,7 @@ describe('Subkategori Controller', () => {
     });
   });
 
-  describe('PUT /api/subkategori/:subkategori_id', () => {
+  describe('PUT /api/subkategori/:subkategoriId', () => {
     beforeEach(async () => {
       await testService.recreatePropertiBarang();
     });
@@ -164,10 +164,10 @@ describe('Subkategori Controller', () => {
       const subkategori = await testService.getSubkategoriTest();
       const response = await request(app.getHttpServer())
         .put('/api/subkategori/' + subkategori.id)
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           nama: 'test updated',
-          jenis_barang: subkategori.jenis_barang,
+          jenisBarang: subkategori.jenisBarang,
         });
 
       logger.info(JSON.stringify(response.body));
@@ -176,17 +176,17 @@ describe('Subkategori Controller', () => {
       expect(response.body.errors).toBeUndefined();
       expect(response.body.data.id).toBe(subkategori.id);
       expect(response.body.data.nama).toBe('test updated');
-      expect(response.body.data.jenis_barang).toBe(subkategori.jenis_barang);
+      expect(response.body.data.jenisBarang).toBe(subkategori.jenisBarang);
     });
 
     it('should reject if token wrong', async () => {
       const subkategori = await testService.getSubkategoriTest();
       const response = await request(app.getHttpServer())
         .put('/api/subkategori/' + subkategori.id)
-        .set('Authorization', `Bearer ${token.access_token}salah`)
+        .set('Authorization', `Bearer ${token.accessToken}salah`)
         .send({
           nama: 'test updated',
-          jenis_barang: subkategori.jenis_barang,
+          jenisBarang: subkategori.jenisBarang,
         });
 
       logger.info(JSON.stringify(response.body));
@@ -198,10 +198,10 @@ describe('Subkategori Controller', () => {
       const subkategori = await testService.getSubkategoriTest();
       const response = await request(app.getHttpServer())
         .put('/api/subkategori/' + (subkategori.id + 1))
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           nama: '',
-          jenis_barang: subkategori.jenis_barang,
+          jenisBarang: subkategori.jenisBarang,
         });
 
       logger.info(JSON.stringify(response.body));
@@ -218,7 +218,7 @@ describe('Subkategori Controller', () => {
     it('should be able get subkategori with default pagination', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/subkategori')
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(200);
@@ -233,7 +233,7 @@ describe('Subkategori Controller', () => {
     it('should be able get subkategori with jenis barang exists', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/subkategori')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           jenisbarang: JenisBarang.Barang,
         });
@@ -251,7 +251,7 @@ describe('Subkategori Controller', () => {
     it('should be able get subkategori with jenis barang does not exists', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/subkategori')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           jenisbarang: JenisBarang.Paket,
         });
@@ -269,7 +269,7 @@ describe('Subkategori Controller', () => {
     it('should be able get subkategori with filter nama', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/subkategori')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           nama: 'te',
         });
@@ -288,7 +288,7 @@ describe('Subkategori Controller', () => {
       await testService.createMultiSubkategoriTest(10);
       const response = await request(app.getHttpServer())
         .get('/api/subkategori')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           page: 1,
           size: 9,
@@ -308,7 +308,7 @@ describe('Subkategori Controller', () => {
       await testService.createMultiSubkategoriTest(10);
       const response = await request(app.getHttpServer())
         .get('/api/subkategori')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           page: 2,
           size: 9,
@@ -327,7 +327,7 @@ describe('Subkategori Controller', () => {
     it('should reject if token invalid', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/subkategori')
-        .set('Authorization', `Bearer ${token.access_token}test`)
+        .set('Authorization', `Bearer ${token.accessToken}test`)
         .query({
           page: 2,
           size: 9,
@@ -340,7 +340,7 @@ describe('Subkategori Controller', () => {
     });
   });
 
-  describe('DELETE /api/subkategori/:subkategori_id', () => {
+  describe('DELETE /api/subkategori/:subkategoriId', () => {
     beforeEach(async () => {
       await testService.recreatePropertiBarang();
     });
@@ -349,7 +349,7 @@ describe('Subkategori Controller', () => {
       const subkategori = await testService.getSubkategoriTest();
       const response = await request(app.getHttpServer())
         .delete('/api/subkategori/' + subkategori.id)
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(200);
@@ -357,14 +357,14 @@ describe('Subkategori Controller', () => {
       expect(response.body.errors).toBeUndefined();
       expect(response.body.data.id).toBe(subkategori.id);
       expect(response.body.data.nama).toBe(subkategori.nama);
-      expect(response.body.data.jenis_barang).toBe(subkategori.jenis_barang);
+      expect(response.body.data.jenisBarang).toBe(subkategori.jenisBarang);
     });
 
     it('should reject if token wrong', async () => {
       const subkategori = await testService.getSubkategoriTest();
       const response = await request(app.getHttpServer())
         .delete('/api/subkategori/' + subkategori.id)
-        .set('Authorization', `Bearer ${token.access_token}salah`);
+        .set('Authorization', `Bearer ${token.accessToken}salah`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(401);
@@ -375,7 +375,7 @@ describe('Subkategori Controller', () => {
       const subkategori = await testService.getSubkategoriTest();
       const response = await request(app.getHttpServer())
         .get('/api/subkategori/' + (subkategori.id + 1))
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(404);

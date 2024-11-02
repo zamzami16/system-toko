@@ -12,27 +12,27 @@ export class BarangResponse {
     enum: JenisBarang,
     isArray: false,
   })
-  jenis_barang: JenisBarang;
-  satuan_id: number;
+  jenisBarang: JenisBarang;
+  satuanId: number;
   satuan?: SatuanResponse;
-  kategori_id: number;
+  kategoriId: number;
   kategori?: KategoriResponse;
-  subkategori_id: number;
+  subkategoriId: number;
   subkategori?: SubkategoriResponse;
   hpp: number = 0;
-  harga_beli_akhir: number = 0;
-  harga_beli_3: number = 0;
-  harga_jual_1: number = 0;
-  harga_jual_2: number = 0;
-  harga_jual_3: number = 0;
+  hargaBeliAkhir: number = 0;
+  hargaBeli_3: number = 0;
+  hargaJual_1: number = 0;
+  hargaJual_2: number = 0;
+  hargaJual_3: number = 0;
   barcode: string;
   expired?: Date;
-  diskon_rp: number = 0;
-  diskon_persen: number = 0;
-  jumlah_stok: number = 0;
-  jumlah_awal: number = 0;
+  diskonRp: number = 0;
+  diskonPersen: number = 0;
+  jumlahStok: number = 0;
+  jumlahAwal: number = 0;
   keterangan: string = '';
-  is_active: boolean = true;
+  isActive: boolean = true;
 }
 
 export class CreateBarangRequest {
@@ -43,24 +43,24 @@ export class CreateBarangRequest {
     default: JenisBarang.Barang,
     isArray: false,
   })
-  jenis_barang: JenisBarang = JenisBarang.Barang;
-  satuan_id: number;
-  kategori_id: number;
-  subkategori_id: number;
+  jenisBarang: JenisBarang = JenisBarang.Barang;
+  satuanId: number;
+  kategoriId: number;
+  subkategoriId: number;
   hpp: number = 0;
-  harga_beli_akhir: number = 0;
-  harga_beli_3: number = 0;
-  harga_jual_1: number = 0;
-  harga_jual_2: number = 0;
-  harga_jual_3: number = 0;
+  hargaBeliAkhir: number = 0;
+  hargaBeli_3: number = 0;
+  hargaJual_1: number = 0;
+  hargaJual_2: number = 0;
+  hargaJual_3: number = 0;
   barcode: string;
   expired?: Date;
-  diskon_rp: number = 0;
-  diskon_persen: number = 0;
-  jumlah_stok: number = 0;
-  jumlah_awal: number = 0;
+  diskonRp: number = 0;
+  diskonPersen: number = 0;
+  jumlahStok: number = 0;
+  jumlahAwal: number = 0;
   keterangan: string = '';
-  is_active: boolean = true;
+  isActive: boolean = true;
 }
 
 export class UpdateBarangRequest {
@@ -71,24 +71,24 @@ export class UpdateBarangRequest {
     enum: JenisBarang,
     isArray: false,
   })
-  jenis_barang: JenisBarang;
-  satuan_id: number;
-  kategori_id: number;
-  subkategori_id: number;
+  jenisBarang: JenisBarang;
+  satuanId: number;
+  kategoriId: number;
+  subkategoriId: number;
   hpp: number;
-  harga_beli_akhir: number;
-  harga_beli_3: number;
-  harga_jual_1: number;
-  harga_jual_2: number;
-  harga_jual_3: number;
+  hargaBeliAkhir: number;
+  hargaBeli_3: number;
+  hargaJual_1: number;
+  hargaJual_2: number;
+  hargaJual_3: number;
   barcode: string;
   expired?: Date;
-  diskon_rp: number;
-  diskon_persen: number;
-  jumlah_stok: number;
-  jumlah_awal: number;
+  diskonRp: number;
+  diskonPersen: number;
+  jumlahStok: number;
+  jumlahAwal: number;
   keterangan: string;
-  is_active: boolean;
+  isActive: boolean;
 }
 
 export class SearchBarangRequest {

@@ -29,11 +29,11 @@ export class UserService {
     });
   }
 
-  async updateRefreshToken(username: string, refresh_token: string) {
-    const hashedRefreshToken = await bcrypt.hash(refresh_token, 10);
+  async updateRefreshToken(username: string, refreshToken: string) {
+    const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
     await this.prismaService.user.update({
       data: {
-        refresh_token: hashedRefreshToken,
+        refreshToken: hashedRefreshToken,
       },
       where: {
         username: username,
@@ -51,13 +51,13 @@ export class UserService {
         username: user.username,
       },
       data: {
-        refresh_token: null,
+        refreshToken: null,
       },
     });
 
     return {
       username: user.username,
-      token: user.refresh_token,
+      token: user.refreshToken,
     };
   }
 
@@ -89,7 +89,7 @@ export class UserService {
           nama: registerRequest.nama,
           alamat: registerRequest.alamat,
           email: registerRequest.email,
-          no_hp: registerRequest.no_hp,
+          noHp: registerRequest.noHp,
         },
       });
     }
@@ -99,13 +99,13 @@ export class UserService {
       data: {
         username: registerRequest.username,
         password: registerRequest.password,
-        contact_id: contact.id,
+        contactId: contact.id,
       },
     });
 
     return {
       username: user.username,
-      token: user.refresh_token,
+      token: user.refreshToken,
     };
   }
 }

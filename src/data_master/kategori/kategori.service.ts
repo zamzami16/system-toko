@@ -22,13 +22,13 @@ export class KategoriService {
     return {
       id: kategori.id,
       nama: kategori.nama,
-      jenis_barang: kategori.jenis_barang,
+      jenisBarang: kategori.jenisBarang,
     };
   }
 
-  async getkategoriOr404(kategori_id: number) {
+  async getkategoriOr404(kategoriId: number) {
     const kategori = await this.prismaService.kategoriBarang.findUnique({
-      where: { id: kategori_id },
+      where: { id: kategoriId },
     });
 
     if (!kategori) {
@@ -45,7 +45,7 @@ export class KategoriService {
     let kategori = await this.prismaService.kategoriBarang.findFirst({
       where: {
         nama: createRequest.nama,
-        jenis_barang: createRequest.jenis_barang,
+        jenisBarang: createRequest.jenisBarang,
       },
     });
 
@@ -100,16 +100,16 @@ export class KategoriService {
       data: kategories,
       paging: {
         page: page,
-        total_page: totalPages,
+        totalPage: totalPages,
         size: size,
       },
     };
   }
 
-  async remove(kategori_id: number): Promise<KategoriResponse> {
-    let kategori = await this.getkategoriOr404(kategori_id);
+  async remove(kategoriId: number): Promise<KategoriResponse> {
+    let kategori = await this.getkategoriOr404(kategoriId);
     kategori = await this.prismaService.kategoriBarang.delete({
-      where: { id: kategori_id },
+      where: { id: kategoriId },
     });
 
     return this.toKategoriResponse(kategori);
@@ -132,11 +132,11 @@ export class KategoriService {
       });
     }
 
-    if (searchRequest.jenis_barang) {
+    if (searchRequest.jenisBarang) {
       filters.push({
         AND: [
           {
-            jenis_barang: searchRequest.jenis_barang,
+            jenisBarang: searchRequest.jenisBarang,
           },
         ],
       });
@@ -178,7 +178,7 @@ export class KategoriService {
       paging: {
         page: searchRequest.page,
         size: searchRequest.size,
-        total_page: totalPages,
+        totalPage: totalPages,
       },
     };
   }

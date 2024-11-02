@@ -21,12 +21,12 @@ enum JenisBarang {
 }
 
 model User {
-  username      String  @id @db.VarChar(50)
-  password      String  @db.VarChar(200)
-  refresh_token String? @db.Text
-  contact_id    Int     @unique()
+  username     String  @id @db.VarChar(50)
+  password     String  @db.VarChar(200)
+  refreshToken String? @map("refresh_token") @db.Text
+  contactId    Int     @unique() @map("contact_id")
 
-  contact Contact @relation(fields: [contact_id], references: [id])
+  contact Contact @relation(fields: [contactId], references: [id])
 
   @@map("users")
 }
@@ -36,7 +36,7 @@ model Contact {
   nama      String     @db.VarChar(200)
   alamat    String?    @db.VarChar(500)
   email     String?    @db.VarChar(500)
-  no_hp     String?    @db.VarChar(20)
+  noHp      String?    @map("no_hp") @db.VarChar(20)
   user      User?
   supplier  Supplier?
   pelanggan Pelanggan?
@@ -45,27 +45,27 @@ model Contact {
 }
 
 model KategoriBarang {
-  id           Int         @id @default(autoincrement())
-  nama         String      @db.VarChar(200)
-  jenis_barang JenisBarang @default(Barang)
-  barangs      Barang[]
+  id          Int         @id @default(autoincrement())
+  nama        String      @db.VarChar(200)
+  jenisBarang JenisBarang @default(Barang) @map("jenis_barang")
+  barangs     Barang[]
 
   @@map("kategori_barang")
 }
 
 model SubKategoriBarang {
-  id           Int         @id @default(autoincrement())
-  nama         String      @db.VarChar(200)
-  jenis_barang JenisBarang @default(Barang)
-  barangs      Barang[]
+  id          Int         @id @default(autoincrement())
+  nama        String      @db.VarChar(200)
+  jenisBarang JenisBarang @default(Barang) @map("jenis_barang")
+  barangs     Barang[]
 
   @@map("sub_kategori_barang")
 }
 
 model SatuanBarang {
-  id           Int         @id @default(autoincrement())
-  nama         String      @db.VarChar(200)
-  jenis_barang JenisBarang @default(Barang)
+  id          Int         @id @default(autoincrement())
+  nama        String      @db.VarChar(200)
+  jenisBarang JenisBarang @default(Barang) @map("jenis_barang")
 
   barangs Barang[]
   gudangs DetailGudang[]
@@ -81,30 +81,30 @@ model Rak {
 }
 
 model Barang {
-  id             Int               @id() @default(autoincrement())
-  nama           String            @db.VarChar(500)
-  jenis_barang   JenisBarang       @default(Barang)
-  satuan_id      Int
-  satuan         SatuanBarang      @relation(fields: [satuan_id], references: [id])
-  kategori_id    Int
-  kategories     KategoriBarang    @relation(fields: [kategori_id], references: [id])
-  subkategori_id Int
-  subkategories  SubKategoriBarang @relation(fields: [subkategori_id], references: [id])
+  id            Int               @id() @default(autoincrement())
+  nama          String            @db.VarChar(500)
+  jenisBarang   JenisBarang       @default(Barang) @map("jenis_barang")
+  satuanId      Int               @map("satuan_id")
+  satuan        SatuanBarang      @relation(fields: [satuanId], references: [id])
+  kategoriId    Int               @map("kategori_id")
+  kategories    KategoriBarang    @relation(fields: [kategoriId], references: [id])
+  subkategoriId Int               @map("subkategori_id")
+  subkategories SubKategoriBarang @relation(fields: [subkategoriId], references: [id])
 
-  hpp              Decimal   @default(0)
-  harga_beli_akhir Decimal   @default(0)
-  harga_beli_3     Decimal   @default(0)
-  harga_jual_1     Decimal   @default(0)
-  harga_jual_2     Decimal   @default(0)
-  harga_jual_3     Decimal   @default(0)
-  barcode          String    @unique() @db.VarChar(100)
-  expired          DateTime? @default(now())
-  diskon_rp        Decimal   @default(0)
-  diskon_persen    Decimal   @default(0)
-  jumlah_stok      Decimal   @default(0)
-  jumlah_awal      Decimal   @default(0)
-  keterangan       String    @db.Text
-  is_active        Boolean   @default(true)
+  hpp            Decimal   @default(0)
+  hargaBeliAkhir Decimal   @default(0) @map("harga_beli_akhir")
+  hargaBeli_3    Decimal   @default(0) @map("harga_beli_3")
+  hargaJual_1    Decimal   @default(0) @map("harga_jual_1")
+  hargaJual_2    Decimal   @default(0) @map("harga_jual_2")
+  hargaJual_3    Decimal   @default(0) @map("harga_jual_3")
+  barcode        String    @unique() @db.VarChar(100)
+  expired        DateTime? @default(now())
+  diskonRp       Decimal   @default(0) @map("diskon_rp")
+  diskonPersen   Decimal   @default(0) @map("diskon_persen")
+  jumlahStok     Decimal   @default(0) @map("jumlah_stok")
+  jumlahAwal     Decimal   @default(0) @map("jumlah_awal")
+  keterangan     String    @db.Text
+  isActive       Boolean   @default(true) @map("is_active")
 
   gudangs DetailGudang[]
 
@@ -112,12 +112,12 @@ model Barang {
 }
 
 model Supplier {
-  contact_id        Int     @id()
-  contact           Contact @relation(fields: [contact_id], references: [id])
-  saldo_hutang      Decimal @default(0)
-  max_hutang        Decimal @default(0)
-  saldo_awal_hutang Decimal @default(0)
-  jatuh_tempo       Decimal @default(0)
+  contactId       Int     @id() @map("contact_id")
+  contact         Contact @relation(fields: [contactId], references: [id])
+  saldoHutang     Decimal @default(0) @map("saldo_hutang")
+  maxHutang       Decimal @default(0) @map("max_hutang")
+  saldoAwalHutang Decimal @default(0) @map("saldo_awal_hutang")
+  jatuhTempo      Decimal @default(0) @map("jatuh_tempo")
 
   @@map("suppliers")
 }
@@ -127,7 +127,7 @@ model Gudang {
   nama       String  @db.VarChar(500)
   alamat     String? @db.VarChar(500)
   keterangan String? @db.Text
-  is_active  Boolean @default(true)
+  isActive   Boolean @default(true) @map("is_active")
 
   barangs DetailGudang[]
 
@@ -135,25 +135,25 @@ model Gudang {
 }
 
 model DetailGudang {
-  barang_id      Int
-  gudang_id      Int
-  satuan_id      Int
-  jumlah         Decimal @default(0)
-  jumlah_minimal Decimal @default(0)
-  berat          Decimal @default(0)
+  barangId      Int     @map("barang_id")
+  gudangId      Int     @map("gudang_id")
+  satuanId      Int     @map("satuan_id")
+  jumlah        Decimal @default(0)
+  jumlahMinimal Decimal @default(0) @map("jumlah_minimal")
+  berat         Decimal @default(0)
 
-  satuans SatuanBarang @relation(fields: [satuan_id], references: [id], onUpdate: Cascade)
-  barangs Barang       @relation(fields: [barang_id], references: [id], onUpdate: Cascade)
-  gudangs Gudang       @relation(fields: [gudang_id], references: [id], onUpdate: Cascade)
+  satuans SatuanBarang @relation(fields: [satuanId], references: [id], onUpdate: Cascade)
+  barangs Barang       @relation(fields: [barangId], references: [id], onUpdate: Cascade)
+  gudangs Gudang       @relation(fields: [gudangId], references: [id], onUpdate: Cascade)
 
-  @@id([barang_id, gudang_id, satuan_id])
+  @@id([barangId, gudangId, satuanId])
   @@map("detail_gudangs")
 }
 
 model JenisPelanggan {
   id        Int     @id @default(autoincrement())
   nama      String  @unique() @db.VarChar(200)
-  isDefault Boolean @default(false) @db.Boolean
+  isDefault Boolean @default(false) @map("is_default") @db.Boolean
 
   pelanggans Pelanggan[]
 
@@ -167,15 +167,15 @@ enum JenisPajak {
 }
 
 model Pelanggan {
-  contactId        Int        @id
-  jenisPelangganId Int
-  isCanCredit      Boolean    @default(false)
-  saldoPiutang     Decimal    @default(0)
-  maxPiutang       Decimal    @default(0)
-  saldoAwalPiutang Decimal    @default(0)
-  limitHariPiutang Int        @default(0)
-  jatuhTempo       Int        @default(0)
-  jenisPajak       JenisPajak @default(None)
+  contactId        Int        @id @map("contact_id")
+  jenisPelangganId Int        @map("jenis_pelanggan_id")
+  isCanCredit      Boolean    @default(false) @map("is_can_credit")
+  saldoPiutang     Decimal    @default(0) @map("saldo_piutang")
+  maxPiutang       Decimal    @default(0) @map("max_piutang")
+  saldoAwalPiutang Decimal    @default(0) @map("saldo_awal_piutang")
+  limitHariPiutang Int        @default(0) @map("limit_hari_piutang")
+  jatuhTempo       Int        @default(0) @map("jatuh_tempo")
+  jenisPajak       JenisPajak @default(None) @map("jenis_pajak")
 
   contact        Contact        @relation(fields: [contactId], references: [id], onUpdate: Cascade)
   jenisPelanggan JenisPelanggan @relation(fields: [jenisPelangganId], references: [id], onUpdate: Cascade)
@@ -197,13 +197,13 @@ enum StatusArusKas {
 
 model Akun {
   kode          String        @id @db.Char(6)
-  kodeAkunInduk String?       @db.Char(6)
+  kodeAkunInduk String?       @map("kode_akun_induk") @db.Char(6)
   nama          String        @db.VarChar(200)
-  levelAkun     Int
-  saldoAwal     Decimal       @default(0)
-  typeAkun      TypeAkun      @default(NonKas)
-  statusArusKas StatusArusKas @default(None)
-  isActive      Boolean       @default(true)
+  levelAkun     Int           @map("level_akun")
+  saldoAwal     Decimal       @default(0) @map("saldo_awal")
+  typeAkun      TypeAkun      @default(NonKas) @map("type_akun")
+  statusArusKas StatusArusKas @default(None) @map("status_arus_kas")
+  isActive      Boolean       @default(true) @map("is_active")
 
   akunInduk      Akun?  @relation("AkunAnakInduk", fields: [kodeAkunInduk], references: [kode])
   akunAnak       Akun[] @relation("AkunAnakInduk")
@@ -215,14 +215,14 @@ model Akun {
 
 model Kas {
   id                  Int     @id @default(autoincrement())
-  kodeAkun            String  @db.Char(6)
+  kodeAkun            String  @map("kode_akun") @db.Char(6)
   akun                Akun    @relation("AkunKas", fields: [kodeAkun], references: [kode])
-  kodeAkunKartuKredit String? @db.Char(6)
+  kodeAkunKartuKredit String? @map("kode_akun_kartu_kredit") @db.Char(6)
   akunKartuKredit     Akun?   @relation("AkunKasKartuKredit", fields: [kodeAkunKartuKredit], references: [kode])
   nama                String  @db.VarChar(200)
-  nomorRekening       String?  @db.VarChar(50)
-  pemilik             String?  @db.VarChar(200)
-  saldoKas            Decimal @default(0)
-  keterangan          String?  @db.Text
-  isActive            Boolean @default(true)
+  nomorRekening       String? @map("nomor_rekening") @db.VarChar(50)
+  pemilik             String? @db.VarChar(200)
+  saldoKas            Decimal @default(0) @map("saldo_kas")
+  keterangan          String? @db.Text
+  isActive            Boolean @default(true) @map("is_active")
 }

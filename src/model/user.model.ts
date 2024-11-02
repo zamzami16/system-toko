@@ -9,5 +9,5 @@ export class RegisterUserRequestDto {
   nama: string;
   alamat?: string;
   email?: string;
-  no_hp?: string;
+  noHp?: string;
 }

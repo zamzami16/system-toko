@@ -12,7 +12,7 @@ describe('Satuan Controller', () => {
   let app: INestApplication;
   let logger: Logger;
   let testService: TestService;
-  let token: { access_token: string };
+  let token: { accessToken: string };
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -39,10 +39,10 @@ describe('Satuan Controller', () => {
     it('should be able to create satuan', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/satuan')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           nama: 'test',
-          jenis_barang: JenisBarang.Barang,
+          jenisBarang: JenisBarang.Barang,
         });
 
       logger.info(JSON.stringify(response.body));
@@ -50,16 +50,16 @@ describe('Satuan Controller', () => {
       expect(response.body.data).toBeDefined();
       expect(response.body.errors).toBeUndefined();
       expect(response.body.data.nama).toBe('test');
-      expect(response.body.data.jenis_barang).toBe(JenisBarang.Barang);
+      expect(response.body.data.jenisBarang).toBe(JenisBarang.Barang);
     });
 
     it('should reject if token wrong', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/satuan')
-        .set('Authorization', `Bearer ${token.access_token}salah`)
+        .set('Authorization', `Bearer ${token.accessToken}salah`)
         .send({
           nama: 'test',
-          jenis_barang: JenisBarang.Barang,
+          jenisBarang: JenisBarang.Barang,
         });
 
       logger.info(JSON.stringify(response.body));
@@ -70,10 +70,10 @@ describe('Satuan Controller', () => {
     it('should reject if data invalid', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/satuan')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           nama: '',
-          jenis_barang: JenisBarang.Barang,
+          jenisBarang: JenisBarang.Barang,
         });
 
       logger.info(JSON.stringify(response.body));
@@ -84,10 +84,10 @@ describe('Satuan Controller', () => {
     it('should reject if jenis barang invalid', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/satuan')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           nama: 'test',
-          jenis_barang: 'Beruang',
+          jenisBarang: 'Beruang',
         });
 
       logger.info(JSON.stringify(response.body));
@@ -99,10 +99,10 @@ describe('Satuan Controller', () => {
       await testService.createSatuanTest();
       const response = await request(app.getHttpServer())
         .post('/api/satuan')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           nama: 'test',
-          jenis_barang: JenisBarang.Barang,
+          jenisBarang: JenisBarang.Barang,
         });
 
       logger.info(JSON.stringify(response.body));
@@ -111,7 +111,7 @@ describe('Satuan Controller', () => {
     });
   });
 
-  describe('GET /api/satuan/:satuan_id', () => {
+  describe('GET /api/satuan/:satuanId', () => {
     beforeEach(async () => {
       await testService.recreatePropertiBarang();
     });
@@ -120,7 +120,7 @@ describe('Satuan Controller', () => {
       const satuan = await testService.getSatuanTest();
       const response = await request(app.getHttpServer())
         .get('/api/satuan/' + satuan.id)
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(200);
@@ -128,14 +128,14 @@ describe('Satuan Controller', () => {
       expect(response.body.errors).toBeUndefined();
       expect(response.body.data.id).toBe(satuan.id);
       expect(response.body.data.nama).toBe(satuan.nama);
-      expect(response.body.data.jenis_barang).toBe(satuan.jenis_barang);
+      expect(response.body.data.jenisBarang).toBe(satuan.jenisBarang);
     });
 
     it('should reject if token wrong', async () => {
       const satuan = await testService.getSatuanTest();
       const response = await request(app.getHttpServer())
         .get('/api/satuan/' + satuan.id)
-        .set('Authorization', `Bearer ${token.access_token}salah`);
+        .set('Authorization', `Bearer ${token.accessToken}salah`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(401);
@@ -146,7 +146,7 @@ describe('Satuan Controller', () => {
       const satuan = await testService.getSatuanTest();
       const response = await request(app.getHttpServer())
         .get('/api/satuan/' + (satuan.id + 1))
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(404);
@@ -154,7 +154,7 @@ describe('Satuan Controller', () => {
     });
   });
 
-  describe('PUT /api/satuan/:satuan_id', () => {
+  describe('PUT /api/satuan/:satuanId', () => {
     beforeEach(async () => {
       await testService.recreatePropertiBarang();
     });
@@ -163,10 +163,10 @@ describe('Satuan Controller', () => {
       const satuan = await testService.getSatuanTest();
       const response = await request(app.getHttpServer())
         .put('/api/satuan/' + satuan.id)
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           nama: 'test updated',
-          jenis_barang: satuan.jenis_barang,
+          jenisBarang: satuan.jenisBarang,
         });
 
       logger.info(JSON.stringify(response.body));
@@ -175,17 +175,17 @@ describe('Satuan Controller', () => {
       expect(response.body.errors).toBeUndefined();
       expect(response.body.data.id).toBe(satuan.id);
       expect(response.body.data.nama).toBe('test updated');
-      expect(response.body.data.jenis_barang).toBe(satuan.jenis_barang);
+      expect(response.body.data.jenisBarang).toBe(satuan.jenisBarang);
     });
 
     it('should reject if token wrong', async () => {
       const satuan = await testService.getSatuanTest();
       const response = await request(app.getHttpServer())
         .put('/api/satuan/' + satuan.id)
-        .set('Authorization', `Bearer ${token.access_token}salah`)
+        .set('Authorization', `Bearer ${token.accessToken}salah`)
         .send({
           nama: 'test updated',
-          jenis_barang: satuan.jenis_barang,
+          jenisBarang: satuan.jenisBarang,
         });
 
       logger.info(JSON.stringify(response.body));
@@ -197,10 +197,10 @@ describe('Satuan Controller', () => {
       const satuan = await testService.getSatuanTest();
       const response = await request(app.getHttpServer())
         .put('/api/satuan/' + (satuan.id + 1))
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           nama: '',
-          jenis_barang: satuan.jenis_barang,
+          jenisBarang: satuan.jenisBarang,
         });
 
       logger.info(JSON.stringify(response.body));
@@ -217,7 +217,7 @@ describe('Satuan Controller', () => {
     it('should be able get satuan with default pagination', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/satuan')
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(200);
@@ -232,7 +232,7 @@ describe('Satuan Controller', () => {
     it('should be able get satuan with jenis barang exists', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/satuan')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           jenisbarang: JenisBarang.Barang,
         });
@@ -250,7 +250,7 @@ describe('Satuan Controller', () => {
     it('should be able get satuan with jenis barang does not exists', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/satuan')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           jenisbarang: JenisBarang.Paket,
         });
@@ -268,7 +268,7 @@ describe('Satuan Controller', () => {
     it('should be able get satuan with filter nama', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/satuan')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           nama: 'te',
         });
@@ -287,7 +287,7 @@ describe('Satuan Controller', () => {
       await testService.createMultiSatuanTest(10);
       const response = await request(app.getHttpServer())
         .get('/api/satuan')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           page: 1,
           size: 9,
@@ -307,7 +307,7 @@ describe('Satuan Controller', () => {
       await testService.createMultiSatuanTest(10);
       const response = await request(app.getHttpServer())
         .get('/api/satuan')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           page: 2,
           size: 9,
@@ -326,7 +326,7 @@ describe('Satuan Controller', () => {
     it('should reject if token invalid', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/satuan')
-        .set('Authorization', `Bearer ${token.access_token}test`)
+        .set('Authorization', `Bearer ${token.accessToken}test`)
         .query({
           page: 2,
           size: 9,
@@ -339,7 +339,7 @@ describe('Satuan Controller', () => {
     });
   });
 
-  describe('DELETE /api/satuan/:satuan_id', () => {
+  describe('DELETE /api/satuan/:satuanId', () => {
     beforeEach(async () => {
       await testService.recreatePropertiBarang();
     });
@@ -348,7 +348,7 @@ describe('Satuan Controller', () => {
       const satuan = await testService.getSatuanTest();
       const response = await request(app.getHttpServer())
         .delete('/api/satuan/' + satuan.id)
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(200);
@@ -356,14 +356,14 @@ describe('Satuan Controller', () => {
       expect(response.body.errors).toBeUndefined();
       expect(response.body.data.id).toBe(satuan.id);
       expect(response.body.data.nama).toBe(satuan.nama);
-      expect(response.body.data.jenis_barang).toBe(satuan.jenis_barang);
+      expect(response.body.data.jenisBarang).toBe(satuan.jenisBarang);
     });
 
     it('should reject if token wrong', async () => {
       const satuan = await testService.getSatuanTest();
       const response = await request(app.getHttpServer())
         .delete('/api/satuan/' + satuan.id)
-        .set('Authorization', `Bearer ${token.access_token}salah`);
+        .set('Authorization', `Bearer ${token.accessToken}salah`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(401);
@@ -374,7 +374,7 @@ describe('Satuan Controller', () => {
       const satuan = await testService.getSatuanTest();
       const response = await request(app.getHttpServer())
         .get('/api/satuan/' + (satuan.id + 1))
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(404);

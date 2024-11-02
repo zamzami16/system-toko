@@ -4,7 +4,7 @@ import { JenisBarang } from '@prisma/client';
 export class RakResponse {
   id: number;
   nama: string;
-  jenis_barang: JenisBarang;
+  jenisBarang: JenisBarang;
 }
 
 export class CreateRakRequest {
@@ -14,7 +14,7 @@ export class CreateRakRequest {
     enum: JenisBarang,
     isArray: false,
   })
-  jenis_barang: JenisBarang;
+  jenisBarang: JenisBarang;
 }
 
 export class UpdateRakRequest {
@@ -25,7 +25,7 @@ export class UpdateRakRequest {
     enum: JenisBarang,
     isArray: false,
   })
-  jenis_barang: JenisBarang;
+  jenisBarang: JenisBarang;
 }
 
 export class SearchRakRequest {
@@ -36,7 +36,7 @@ export class SearchRakRequest {
     enum: JenisBarang,
     isArray: false,
   })
-  jenis_barang?: JenisBarang;
+  jenisBarang?: JenisBarang;
   page?: number;
   size?: number;
 }

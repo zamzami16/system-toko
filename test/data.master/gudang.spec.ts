@@ -12,7 +12,7 @@ describe('Barang Controller', () => {
   let app: INestApplication;
   let logger: Logger;
   let testService: TestService;
-  let token: { access_token: string };
+  let token: { accessToken: string };
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -40,12 +40,12 @@ describe('Barang Controller', () => {
     it('should be able to create gudang', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/gudangs')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           nama: 'gudang test',
           alamat: 'jl. in aja dulu',
           keterangan: 'gudang untuk test',
-          is_active: true,
+          isActive: true,
         });
 
       logger.info(JSON.stringify(response.body));
@@ -58,7 +58,7 @@ describe('Barang Controller', () => {
     it('should be able to create gudang with nama only', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/gudangs')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           nama: 'gudang test',
         });
@@ -73,7 +73,7 @@ describe('Barang Controller', () => {
     it('should be able to create gudang with nama alamat', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/gudangs')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           nama: 'gudang test',
           alamat: 'jl. in aja dulu',
@@ -89,7 +89,7 @@ describe('Barang Controller', () => {
     it('should be able to create gudang with nama and keterangan', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/gudangs')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           nama: 'gudang test',
           keterangan: 'gudang untuk test',
@@ -105,7 +105,7 @@ describe('Barang Controller', () => {
     it('should reject if nama invalid', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/gudangs')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           nama: '',
         });
@@ -119,7 +119,7 @@ describe('Barang Controller', () => {
     it('should reject if token invalid', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/gudangs')
-        .set('Authorization', `Bearer ${token.access_token}salah`)
+        .set('Authorization', `Bearer ${token.accessToken}salah`)
         .send({
           nama: '',
         });
@@ -134,12 +134,12 @@ describe('Barang Controller', () => {
       await testService.createGudangTest();
       const response = await request(app.getHttpServer())
         .post('/api/gudangs')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           nama: 'gudang test',
           alamat: 'jl. in aja dulu',
           keterangan: 'gudang untuk test',
-          is_active: true,
+          isActive: true,
         });
 
       logger.info(JSON.stringify(response.body));
@@ -160,7 +160,7 @@ describe('Barang Controller', () => {
     it('should be able to get gudang', async () => {
       const response = await request(app.getHttpServer())
         .get(`/api/gudangs/${gudang.id}`)
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(200);
@@ -172,7 +172,7 @@ describe('Barang Controller', () => {
     it('should reject if gudang not found', async () => {
       const response = await request(app.getHttpServer())
         .get(`/api/gudangs/${gudang.id + 1}`)
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(404);
@@ -183,7 +183,7 @@ describe('Barang Controller', () => {
     it('should reject if token invalid', async () => {
       const response = await request(app.getHttpServer())
         .get(`/api/gudangs/${gudang.id}`)
-        .set('Authorization', `Bearer ${token.access_token}salah`);
+        .set('Authorization', `Bearer ${token.accessToken}salah`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(401);
@@ -203,7 +203,7 @@ describe('Barang Controller', () => {
     it('should be able to delete gudang', async () => {
       const response = await request(app.getHttpServer())
         .delete(`/api/gudangs/${gudang.id}`)
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(200);
@@ -218,7 +218,7 @@ describe('Barang Controller', () => {
     it('should reject if gudang not found', async () => {
       const response = await request(app.getHttpServer())
         .delete(`/api/gudangs/${gudang.id + 1}`)
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(404);
@@ -229,7 +229,7 @@ describe('Barang Controller', () => {
     it('should reject if token invalid', async () => {
       const response = await request(app.getHttpServer())
         .delete(`/api/gudangs/${gudang.id}`)
-        .set('Authorization', `Bearer ${token.access_token}salah`);
+        .set('Authorization', `Bearer ${token.accessToken}salah`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(401);
@@ -249,7 +249,7 @@ describe('Barang Controller', () => {
     it('should be able to update gudang', async () => {
       const response = await request(app.getHttpServer())
         .put(`/api/gudangs/${gudang.id}`)
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           nama: gudang.nama + ' updated',
         });
@@ -264,7 +264,7 @@ describe('Barang Controller', () => {
     it('should reject if gudang not found', async () => {
       const response = await request(app.getHttpServer())
         .put(`/api/gudangs/${gudang.id + 1}`)
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           nama: gudang.nama + ' updated',
         });
@@ -278,7 +278,7 @@ describe('Barang Controller', () => {
     it('should reject if nama invalid', async () => {
       const response = await request(app.getHttpServer())
         .put(`/api/gudangs/${gudang.id}`)
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           nama: '',
         });
@@ -292,7 +292,7 @@ describe('Barang Controller', () => {
     it('should reject if token invalid', async () => {
       const response = await request(app.getHttpServer())
         .put(`/api/gudangs/${gudang.id}`)
-        .set('Authorization', `Bearer ${token.access_token}salah`);
+        .set('Authorization', `Bearer ${token.accessToken}salah`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(401);
@@ -312,7 +312,7 @@ describe('Barang Controller', () => {
       await testService.createGudangMultiTest();
       const response = await request(app.getHttpServer())
         .get(`/api/gudangs`)
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(200);
@@ -322,14 +322,14 @@ describe('Barang Controller', () => {
       expect(response.body.paging).toBeDefined();
       expect(response.body.paging.page).toBe(1);
       expect(response.body.paging.size).toBe(10);
-      expect(response.body.paging.total_page).toBeGreaterThan(1);
+      expect(response.body.paging.totalPage).toBeGreaterThan(1);
     });
 
     it('should be able to search gudang nama filter', async () => {
       await testService.createGudangMultiTest();
       const response = await request(app.getHttpServer())
         .get(`/api/gudangs`)
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           nama: 'multi',
         });
@@ -342,14 +342,14 @@ describe('Barang Controller', () => {
       expect(response.body.paging).toBeDefined();
       expect(response.body.paging.page).toBe(1);
       expect(response.body.paging.size).toBe(10);
-      expect(response.body.paging.total_page).toBe(1);
+      expect(response.body.paging.totalPage).toBe(1);
     });
 
     it('should be able to search gudang alamat filter', async () => {
       await testService.createGudangMultiTest();
       const response = await request(app.getHttpServer())
         .get(`/api/gudangs`)
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           alamat: 'multi',
         });
@@ -362,14 +362,14 @@ describe('Barang Controller', () => {
       expect(response.body.paging).toBeDefined();
       expect(response.body.paging.page).toBe(1);
       expect(response.body.paging.size).toBe(10);
-      expect(response.body.paging.total_page).toBe(1);
+      expect(response.body.paging.totalPage).toBe(1);
     });
 
     it('should be able to search gudang keterangan filter', async () => {
       await testService.createGudangMultiTest();
       const response = await request(app.getHttpServer())
         .get(`/api/gudangs`)
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           keterangan: 'multi',
         });
@@ -382,16 +382,16 @@ describe('Barang Controller', () => {
       expect(response.body.paging).toBeDefined();
       expect(response.body.paging.page).toBe(1);
       expect(response.body.paging.size).toBe(10);
-      expect(response.body.paging.total_page).toBe(1);
+      expect(response.body.paging.totalPage).toBe(1);
     });
 
-    it('should be able to search gudang is_active = true filter', async () => {
+    it('should be able to search gudang isActive = true filter', async () => {
       await testService.createGudangMultiTest();
       const response = await request(app.getHttpServer())
         .get(`/api/gudangs`)
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
-          is_active: true,
+          isActive: true,
         });
 
       logger.info(JSON.stringify(response.body));
@@ -402,16 +402,16 @@ describe('Barang Controller', () => {
       expect(response.body.paging).toBeDefined();
       expect(response.body.paging.page).toBe(1);
       expect(response.body.paging.size).toBe(10);
-      expect(response.body.paging.total_page).toBe(2);
+      expect(response.body.paging.totalPage).toBe(2);
     });
 
-    it('should be able to search gudang is_active = false filter', async () => {
+    it('should be able to search gudang isActive = false filter', async () => {
       await testService.createGudangMultiTest();
       const response = await request(app.getHttpServer())
         .get(`/api/gudangs`)
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
-          is_active: false,
+          isActive: false,
         });
 
       logger.info(JSON.stringify(response.body));
@@ -422,7 +422,7 @@ describe('Barang Controller', () => {
       expect(response.body.paging).toBeDefined();
       expect(response.body.paging.page).toBe(1);
       expect(response.body.paging.size).toBe(10);
-      expect(response.body.paging.total_page).toBe(0);
+      expect(response.body.paging.totalPage).toBe(0);
     });
   });
 });

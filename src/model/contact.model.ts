@@ -2,7 +2,7 @@ export class CreateContactRequest {
   nama: string;
   alamat?: string;
   email?: string;
-  no_hp?: string;
+  noHp?: string;
 }
 
 export class ContactResponse {
@@ -10,7 +10,7 @@ export class ContactResponse {
   nama: string;
   alamat: string;
   email: string;
-  no_hp: string;
+  noHp: string;
 }
 
 export class UpdateContactRequest {
@@ -18,14 +18,14 @@ export class UpdateContactRequest {
   nama?: string;
   alamat?: string;
   email?: string;
-  no_hp?: string;
+  noHp?: string;
 }
 
 export class SearchContactRequest {
   nama?: string;
   alamat?: string;
   email?: string;
-  no_hp?: string;
+  noHp?: string;
   page: number;
   size: number;
 }

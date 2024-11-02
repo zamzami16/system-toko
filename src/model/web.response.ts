@@ -5,7 +5,7 @@ export class WebResponse<T> {
 }
 
 export class Paging {
-  total_page: number;
+  totalPage: number;
   page: number;
   size: number;
 }

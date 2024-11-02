@@ -48,10 +48,10 @@ export class KategoriController {
    * @param kategoriId The Id of Kategori to be get
    * @returns Kategori data
    */
-  @Get('/:kategori_id')
+  @Get('/:kategoriId')
   @HttpCode(200)
   async get(
-    @Param('kategori_id', ParseIntPipe) kategoriId: number,
+    @Param('kategoriId', ParseIntPipe) kategoriId: number,
   ): Promise<WebResponse<KategoriResponse>> {
     const result = await this.kategoriService.get(kategoriId);
     return {
@@ -65,10 +65,10 @@ export class KategoriController {
    * @param request The request body containing Kategori data tobe updated
    * @returns A WebResponse containing updated data
    */
-  @Put('/:kategori_id')
+  @Put('/:kategoriId')
   @HttpCode(200)
   async update(
-    @Param('kategori_id', ParseIntPipe) kategoriId: number,
+    @Param('kategoriId', ParseIntPipe) kategoriId: number,
     @Body() request: UpdatekategoriRequest,
   ): Promise<WebResponse<KategoriResponse>> {
     request.id = kategoriId;
@@ -92,9 +92,9 @@ export class KategoriController {
   })
   async serach(
     @Query('id', new ParseIntPipe({ optional: true }))
-    kategori_id?: number,
+    kategoriId?: number,
     @Query('nama') nama?: string,
-    @Query('jenisbarang') jenis_barang?: JenisBarang,
+    @Query('jenisbarang') jenisBarang?: JenisBarang,
     @Query('page', new ParseIntPipe({ optional: true }))
     page?: number,
     @Query('size', new ParseIntPipe({ optional: true })) size?: number,
@@ -102,19 +102,19 @@ export class KategoriController {
     const request: SearchkategoriRequest = {
       page: page || 1,
       size: size || 10,
-      id: kategori_id,
+      id: kategoriId,
       nama: nama,
-      jenis_barang: jenis_barang || JenisBarang.Barang,
+      jenisBarang: jenisBarang || JenisBarang.Barang,
     };
 
     const result = await this.kategoriService.search(request);
     return result;
   }
 
-  @Delete('/:kategori_id')
+  @Delete('/:kategoriId')
   @HttpCode(200)
-  async remove(@Param('kategori_id', ParseIntPipe) kategori_id: number) {
-    const result = await this.kategoriService.remove(kategori_id);
+  async remove(@Param('kategoriId', ParseIntPipe) kategoriId: number) {
+    const result = await this.kategoriService.remove(kategoriId);
     return {
       data: result,
     };
