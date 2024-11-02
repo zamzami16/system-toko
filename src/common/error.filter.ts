@@ -5,6 +5,7 @@ import {
   HttpException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { ZodError } from 'zod';
 
 @Catch(ZodError, HttpException)
@@ -23,6 +24,13 @@ export class ErrorFilter implements ExceptionFilter {
     } else if (exception instanceof UnauthorizedException) {
       response.status(exception.getStatus()).json({
         errors: exception.getResponse(),
+      });
+    } else if (exception instanceof Prisma.PrismaClientKnownRequestError) {
+      response.status(500).json({
+        errors:
+          process.env.NODE_ENV === 'production'
+            ? 'Internal server error'
+            : exception.message,
       });
     } else {
       response.status(500).json({

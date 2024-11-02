@@ -50,7 +50,7 @@ model KategoriBarang {
   jenisBarang JenisBarang @default(Barang) @map("jenis_barang")
   barangs     Barang[]
 
-  @@map("kategori_barang")
+  @@map("kategori_barangs")
 }
 
 model SubKategoriBarang {
@@ -70,14 +70,14 @@ model SatuanBarang {
   barangs Barang[]
   gudangs DetailGudang[]
 
-  @@map("satuan_barang")
+  @@map("satuan_barangs")
 }
 
 model Rak {
   id   Int    @id @default(autoincrement())
   nama String @db.VarChar(200)
 
-  @@map("rak")
+  @@map("raks")
 }
 
 model Barang {
@@ -106,9 +106,12 @@ model Barang {
   keterangan     String    @db.Text
   isActive       Boolean   @default(true) @map("is_active")
 
+  supplierContactId Int      @map("supplier_contact_id")
+  supplier          Supplier @relation(fields: [supplierContactId], references: [contactId])
+
   gudangs DetailGudang[]
 
-  @@map("barang")
+  @@map("barangs")
 }
 
 model Supplier {
@@ -118,6 +121,8 @@ model Supplier {
   maxHutang       Decimal @default(0) @map("max_hutang")
   saldoAwalHutang Decimal @default(0) @map("saldo_awal_hutang")
   jatuhTempo      Decimal @default(0) @map("jatuh_tempo")
+
+  barangs Barang[]
 
   @@map("suppliers")
 }
@@ -225,4 +230,6 @@ model Kas {
   saldoKas            Decimal @default(0) @map("saldo_kas")
   keterangan          String? @db.Text
   isActive            Boolean @default(true) @map("is_active")
+
+  @@map("kas")
 }

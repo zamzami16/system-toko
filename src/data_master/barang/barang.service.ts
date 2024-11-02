@@ -12,8 +12,9 @@ import { ValidationService } from '../../common/validation.service';
 import { BarangValidation } from './barang.validation';
 import { SatuanService } from '../satuan/satuan.service';
 import { randomUUID } from 'crypto';
-import { Barang } from '@prisma/client';
+import { Barang, Supplier } from '@prisma/client';
 import { WebResponse } from '../../model/web.response';
+import { NotFoundError } from '../../common/toko.exceptions';
 
 @Injectable()
 export class BarangService {
@@ -47,6 +48,7 @@ export class BarangService {
       jumlahAwal: barang.jumlahAwal.toNumber(),
       keterangan: barang.keterangan,
       isActive: barang.isActive,
+      supplierContactId: barang.supplierContactId,
     };
 
     // Optionally map associated data if available
@@ -90,6 +92,18 @@ export class BarangService {
     return barang;
   }
 
+  async getSupplierBarangOr404(supplierContactId: number): Promise<Supplier> {
+    const supplier = await this.prismaService.supplier.findUnique({
+      where: {
+        contactId: supplierContactId,
+      },
+    });
+    if (!supplier) {
+      throw new NotFoundError('Supplier not found');
+    }
+    return supplier;
+  }
+
   async create(request: CreateBarangRequest): Promise<BarangResponse> {
     const createRequest: CreateBarangRequest = this.validationService.validate(
       BarangValidation.CREATE,
@@ -118,6 +132,8 @@ export class BarangService {
         }
       }
     }
+
+    await this.getSupplierBarangOr404(createRequest.supplierContactId);
 
     const exists_barang = await this.prismaService.barang.findFirst({
       where: {
@@ -150,6 +166,9 @@ export class BarangService {
     );
 
     let barang = await this.getBarangOr404(updatedRequest.id);
+    if (updatedRequest.supplierContactId !== barang.supplierContactId) {
+      await this.getSupplierBarangOr404(updatedRequest.supplierContactId);
+    }
 
     barang = await this.prismaService.barang.update({
       data: updatedRequest,
@@ -255,6 +274,16 @@ export class BarangService {
               contains: searchRequest.nama,
               mode: 'insensitive',
             },
+          },
+        ],
+      });
+    }
+
+    if (searchRequest.supplierContactId) {
+      query.push({
+        AND: [
+          {
+            supplierContactId: searchRequest.supplierContactId,
           },
         ],
       });
