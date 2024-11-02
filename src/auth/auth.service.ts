@@ -42,28 +42,28 @@ export class AuthService {
       throw new HttpException('Username or password wrong.', 400);
     }
 
-    const tokens = await this.getTokens(user.contact_id, user.username);
+    const tokens = await this.getTokens(user.contactId, user.username);
     await this.userService.updateRefreshToken(
       user.username,
-      tokens.refresh_token,
+      tokens.refreshToken,
     );
 
     return tokens;
   }
 
-  async refreshToken(username: string, refresh_token: string): Promise<Tokens> {
+  async refreshToken(username: string, refreshToken: string): Promise<Tokens> {
     const user = await this.userService.findFromUsername(username);
-    if (!user || !user.refresh_token)
+    if (!user || !user.refreshToken)
       throw new UnauthorizedException('forbidden.');
     const refreshTokenMatches = await bcryt.compare(
-      refresh_token,
-      user.refresh_token,
+      refreshToken,
+      user.refreshToken,
     );
     if (!refreshTokenMatches) throw new UnauthorizedException('forbidden.');
-    const tokens = await this.getTokens(user.contact_id, user.username);
+    const tokens = await this.getTokens(user.contactId, user.username);
     await this.userService.updateRefreshToken(
       user.username,
-      tokens.refresh_token,
+      tokens.refreshToken,
     );
     return tokens;
   }
@@ -75,8 +75,8 @@ export class AuthService {
     }
     await this.userService.deleteRefreshToken(user.username);
     return {
-      access_token: '',
-      refresh_token: '',
+      accessToken: '',
+      refreshToken: '',
     };
   }
 
@@ -105,8 +105,8 @@ export class AuthService {
     ]);
 
     return {
-      access_token: accessToken,
-      refresh_token: refreshToken,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
     };
   }
 }

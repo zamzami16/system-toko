@@ -48,10 +48,10 @@ export class SubkategoriController {
    * @param subkategoriId The Id of subKategori to be get
    * @returns SUbkategori data
    */
-  @Get('/:subkategori_id')
+  @Get('/:subkategoriId')
   @HttpCode(200)
   async get(
-    @Param('subkategori_id', ParseIntPipe) subkategoriId: number,
+    @Param('subkategoriId', ParseIntPipe) subkategoriId: number,
   ): Promise<WebResponse<SubkategoriResponse>> {
     const result = await this.subkategoriService.get(subkategoriId);
     return {
@@ -65,10 +65,10 @@ export class SubkategoriController {
    * @param request The request body containing Subkategori data tobe updated
    * @returns A WebResponse containing updated data
    */
-  @Put('/:subkategori_id')
+  @Put('/:subkategoriId')
   @HttpCode(200)
   async update(
-    @Param('subkategori_id', ParseIntPipe) subkategoriId: number,
+    @Param('subkategoriId', ParseIntPipe) subkategoriId: number,
     @Body() request: UpdateSubkategoriRequest,
   ): Promise<WebResponse<SubkategoriResponse>> {
     request.id = subkategoriId;
@@ -91,9 +91,9 @@ export class SubkategoriController {
     isArray: false,
   })
   async serach(
-    @Query('id', new ParseIntPipe({ optional: true })) subkategori_id?: number,
+    @Query('id', new ParseIntPipe({ optional: true })) subkategoriId?: number,
     @Query('nama') nama?: string,
-    @Query('jenisbarang') jenis_barang?: JenisBarang,
+    @Query('jenisbarang') jenisBarang?: JenisBarang,
     @Query('page', new ParseIntPipe({ optional: true }))
     page?: number,
     @Query('size', new ParseIntPipe({ optional: true })) size?: number,
@@ -101,19 +101,19 @@ export class SubkategoriController {
     const request: SearchSubkategoriRequest = {
       page: page || 1,
       size: size || 10,
-      id: subkategori_id,
+      id: subkategoriId,
       nama: nama,
-      jenis_barang: jenis_barang || JenisBarang.Barang,
+      jenisBarang: jenisBarang || JenisBarang.Barang,
     };
 
     const result = await this.subkategoriService.search(request);
     return result;
   }
 
-  @Delete('/:subkategori_id')
+  @Delete('/:subkategoriId')
   @HttpCode(200)
-  async remove(@Param('subkategori_id', ParseIntPipe) subkategori_id: number) {
-    const result = await this.subkategoriService.remove(subkategori_id);
+  async remove(@Param('subkategoriId', ParseIntPipe) subkategoriId: number) {
+    const result = await this.subkategoriService.remove(subkategoriId);
     return {
       data: result,
     };

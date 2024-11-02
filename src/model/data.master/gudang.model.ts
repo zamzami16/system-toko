@@ -3,14 +3,14 @@ export class GudangResponse {
   nama: string;
   alamat: string;
   keterangan: string;
-  is_active: boolean = true;
+  isActive: boolean = true;
 }
 
 export class CreateGudangRequest {
   nama: string;
   alamat?: string;
   keterangan?: string;
-  is_active: boolean = true;
+  isActive: boolean = true;
 }
 
 export class UpdateGudangRequest {
@@ -18,14 +18,14 @@ export class UpdateGudangRequest {
   nama?: string;
   alamat?: string;
   keterangan?: string;
-  is_active: boolean = true;
+  isActive: boolean = true;
 }
 
 export class SearchGudangRequest {
   nama?: string;
   alamat?: string;
   keterangan?: string;
-  is_active?: boolean;
+  isActive?: boolean;
   page: number;
   size: number;
 }

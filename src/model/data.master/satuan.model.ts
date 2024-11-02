@@ -4,7 +4,7 @@ import { JenisBarang } from '@prisma/client';
 export class SatuanResponse {
   id: number;
   nama: string;
-  jenis_barang: JenisBarang;
+  jenisBarang: JenisBarang;
 }
 
 export class CreateSatuanRequest {
@@ -14,7 +14,7 @@ export class CreateSatuanRequest {
     enum: JenisBarang,
     isArray: false,
   })
-  jenis_barang: JenisBarang;
+  jenisBarang: JenisBarang;
 }
 
 export class UpdateSatuanRequest {
@@ -25,7 +25,7 @@ export class UpdateSatuanRequest {
     enum: JenisBarang,
     isArray: false,
   })
-  jenis_barang: JenisBarang;
+  jenisBarang: JenisBarang;
 }
 
 export class SearchSatuanRequest {
@@ -36,7 +36,7 @@ export class SearchSatuanRequest {
     enum: JenisBarang,
     isArray: false,
   })
-  jenis_barang?: JenisBarang;
+  jenisBarang?: JenisBarang;
   page?: number;
   size?: number;
 }

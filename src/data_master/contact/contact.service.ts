@@ -28,7 +28,7 @@ export class ContactService {
       nama: contact.nama,
       alamat: contact.alamat,
       email: contact.email,
-      no_hp: contact.no_hp,
+      noHp: contact.noHp,
     };
   }
 
@@ -40,8 +40,8 @@ export class ContactService {
     });
   }
 
-  async getContactOr404(contact_id: number): Promise<Contact> {
-    const contact = await this.getContactById(contact_id);
+  async getContactOr404(contactId: number): Promise<Contact> {
+    const contact = await this.getContactById(contactId);
     if (!contact) {
       throw new NotFoundError();
     }
@@ -49,7 +49,7 @@ export class ContactService {
     return contact;
   }
 
-  async cekContactUnique(nama: string, contact_id: number) {
+  async cekContactUnique(nama: string, contactId: number) {
     const contact = await this.prismaService.contact.findFirst({
       where: {
         AND: [
@@ -58,7 +58,7 @@ export class ContactService {
           },
           {
             id: {
-              not: contact_id,
+              not: contactId,
             },
           },
         ],
@@ -90,8 +90,8 @@ export class ContactService {
     return this.toContactResponse(contact);
   }
 
-  async detail(contact_id: number): Promise<ContactResponse> {
-    const contact = await this.getContactOr404(contact_id);
+  async detail(contactId: number): Promise<ContactResponse> {
+    const contact = await this.getContactOr404(contactId);
     return this.toContactResponse(contact);
   }
 
@@ -113,11 +113,11 @@ export class ContactService {
     return this.toContactResponse(contact);
   }
 
-  async delete(contact_id: number): Promise<ContactResponse> {
-    let contact = await this.getContactOr404(contact_id);
+  async delete(contactId: number): Promise<ContactResponse> {
+    let contact = await this.getContactOr404(contactId);
     contact = await this.prismaService.contact.delete({
       where: {
-        id: contact_id,
+        id: contactId,
       },
     });
     return this.toContactResponse(contact);
@@ -152,7 +152,7 @@ export class ContactService {
       paging: {
         size: searchRequest.size,
         page: searchRequest.page,
-        total_page: Math.ceil(total / searchRequest.size),
+        totalPage: Math.ceil(total / searchRequest.size),
       },
     };
   }
@@ -198,12 +198,12 @@ export class ContactService {
       });
     }
 
-    if (search.no_hp) {
+    if (search.noHp) {
       filter.push({
         AND: [
           {
-            no_hp: {
-              contains: search.no_hp,
+            noHp: {
+              contains: search.noHp,
               mode: 'insensitive',
             },
           },

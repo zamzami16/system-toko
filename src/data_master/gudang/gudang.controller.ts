@@ -75,8 +75,8 @@ export class GudangController {
     @Query('nama') nama?: string,
     @Query('alamat') alamat?: string,
     @Query('keterangan') keterangan?: string,
-    @Query('is_active', new ParseBoolPipe({ optional: true }))
-    is_active?: boolean,
+    @Query('isActive', new ParseBoolPipe({ optional: true }))
+    isActive?: boolean,
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('size', new ParseIntPipe({ optional: true })) size?: number,
   ): Promise<WebResponse<GudangResponse[]>> {
@@ -84,7 +84,7 @@ export class GudangController {
       nama: nama,
       alamat: alamat,
       keterangan: keterangan,
-      is_active: is_active,
+      isActive: isActive,
       page: page || 1,
       size: size || 10,
     };

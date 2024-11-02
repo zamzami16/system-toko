@@ -61,10 +61,10 @@ export class GudangService {
       const allBarangs = await tx.barang.findMany();
 
       const detailGudangs = allBarangs.map((barang) => ({
-        barang_id: barang.id,
-        gudang_id: newGudang.id,
-        satuan_id: barang.satuan_id,
-        jumlah: barang.jumlah_stok,
+        barangId: barang.id,
+        gudangId: newGudang.id,
+        satuanId: barang.satuanId,
+        jumlah: barang.jumlahStok,
       }));
 
       await tx.detailGudang.createMany({
@@ -135,7 +135,7 @@ export class GudangService {
       paging: {
         page: searchRequest.page,
         size: searchRequest.size,
-        total_page: Math.ceil(total / searchRequest.size),
+        totalPage: Math.ceil(total / searchRequest.size),
       },
     };
   }
@@ -179,11 +179,11 @@ export class GudangService {
         ],
       });
     }
-    if (request.is_active !== undefined) {
+    if (request.isActive !== undefined) {
       filters.push({
         AND: [
           {
-            is_active: request.is_active,
+            isActive: request.isActive,
           },
         ],
       });

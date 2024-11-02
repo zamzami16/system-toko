@@ -194,7 +194,7 @@ export class PelangganService {
       paging: {
         page: searchRequest.page,
         size: searchRequest.size,
-        total_page: totalPage,
+        totalPage: totalPage,
       },
     };
   }

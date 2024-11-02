@@ -55,7 +55,7 @@ export class TestService {
       data: {
         username: 'test',
         password: password,
-        contact_id: contact.id,
+        contactId: contact.id,
       },
     });
   }
@@ -97,7 +97,7 @@ export class TestService {
     await this.prismaService.kategoriBarang.create({
       data: {
         nama: 'test',
-        jenis_barang: JenisBarang.Barang,
+        jenisBarang: JenisBarang.Barang,
       },
     });
   }
@@ -107,7 +107,7 @@ export class TestService {
     for (let i = 0; i < total; i++) {
       data.push({
         nama: 'test ' + (i + 1),
-        jenis_barang: JenisBarang.Barang,
+        jenisBarang: JenisBarang.Barang,
       });
     }
     await this.prismaService.kategoriBarang.createMany({
@@ -135,7 +135,7 @@ export class TestService {
     await this.prismaService.subKategoriBarang.create({
       data: {
         nama: 'test',
-        jenis_barang: JenisBarang.Barang,
+        jenisBarang: JenisBarang.Barang,
       },
     });
   }
@@ -151,7 +151,7 @@ export class TestService {
     for (let i = 0; i < total; i++) {
       data.push({
         nama: 'test ' + (i + 1),
-        jenis_barang: JenisBarang.Barang,
+        jenisBarang: JenisBarang.Barang,
       });
     }
     await this.prismaService.subKategoriBarang.createMany({
@@ -173,7 +173,7 @@ export class TestService {
     await this.prismaService.satuanBarang.create({
       data: {
         nama: 'test',
-        jenis_barang: JenisBarang.Barang,
+        jenisBarang: JenisBarang.Barang,
       },
     });
   }
@@ -189,7 +189,7 @@ export class TestService {
     for (let i = 0; i < total; i++) {
       data.push({
         nama: 'test ' + (i + 1),
-        jenis_barang: JenisBarang.Barang,
+        jenisBarang: JenisBarang.Barang,
       });
     }
     await this.prismaService.satuanBarang.createMany({
@@ -214,9 +214,9 @@ export class TestService {
 
     const barang = new CreateBarangRequest();
     barang.nama = 'test';
-    barang.kategori_id = kategori.id;
-    barang.satuan_id = satuan.id;
-    barang.subkategori_id = subkategori.id;
+    barang.kategoriId = kategori.id;
+    barang.satuanId = satuan.id;
+    barang.subkategoriId = subkategori.id;
 
     return barang;
   }
@@ -263,24 +263,24 @@ export class TestService {
 
     const b = await this.createBarang();
     b.barcode = barang.barcode;
-    b.diskon_persen = barang.diskon_persen.toNumber();
-    b.diskon_rp = barang.diskon_rp.toNumber();
+    b.diskonPersen = barang.diskonPersen.toNumber();
+    b.diskonRp = barang.diskonRp.toNumber();
     b.expired = barang.expired;
-    b.harga_beli_3 = barang.harga_beli_3.toNumber();
-    b.harga_beli_akhir = barang.harga_beli_akhir.toNumber();
-    b.harga_jual_1 = barang.harga_jual_1.toNumber();
-    b.harga_jual_2 = barang.harga_jual_2.toNumber();
-    b.harga_jual_3 = barang.harga_jual_3.toNumber();
+    b.hargaBeli_3 = barang.hargaBeli_3.toNumber();
+    b.hargaBeliAkhir = barang.hargaBeliAkhir.toNumber();
+    b.hargaJual_1 = barang.hargaJual_1.toNumber();
+    b.hargaJual_2 = barang.hargaJual_2.toNumber();
+    b.hargaJual_3 = barang.hargaJual_3.toNumber();
     b.hpp = barang.hpp.toNumber();
-    b.is_active = barang.is_active;
-    b.jenis_barang = barang.jenis_barang;
-    b.jumlah_awal = barang.jumlah_awal.toNumber();
-    b.jumlah_stok = barang.jumlah_stok.toNumber();
-    b.kategori_id = barang.kategori_id;
+    b.isActive = barang.isActive;
+    b.jenisBarang = barang.jenisBarang;
+    b.jumlahAwal = barang.jumlahAwal.toNumber();
+    b.jumlahStok = barang.jumlahStok.toNumber();
+    b.kategoriId = barang.kategoriId;
     b.keterangan = barang.keterangan;
     b.nama = barang.nama;
-    b.satuan_id = barang.satuan_id;
-    b.subkategori_id = barang.subkategori_id;
+    b.satuanId = barang.satuanId;
+    b.subkategoriId = barang.subkategoriId;
     return {
       id: barang.id,
       ...b,
@@ -325,7 +325,7 @@ export class TestService {
         nama: 'Contact Multi Test ' + (i + 1),
         alamat: 'Alamat ' + (i + 1),
         email: `ContactMulti${i + 1}@test.com`,
-        no_hp: `${i + 1}89723662231`,
+        noHp: `${i + 1}89723662231`,
       });
     }
 
@@ -384,10 +384,10 @@ export class TestService {
   async createSupplierTest() {
     const supplier = await this.prismaService.supplier.create({
       data: {
-        max_hutang: 2_000_000_000,
-        saldo_awal_hutang: 2_000_000,
-        saldo_hutang: 5_000_000,
-        jatuh_tempo: 35,
+        maxHutang: 2_000_000_000,
+        saldoAwalHutang: 2_000_000,
+        saldoHutang: 5_000_000,
+        jatuhTempo: 35,
         contact: {
           create: {
             nama: 'supplier test',
@@ -408,16 +408,16 @@ export class TestService {
       inserts.push(
         this.prismaService.supplier.create({
           data: {
-            max_hutang: 2_000_000_000 * inc,
-            saldo_awal_hutang: 2_000_000 * inc,
-            saldo_hutang: 5_000_000 * inc,
-            jatuh_tempo: 35 * inc,
+            maxHutang: 2_000_000_000 * inc,
+            saldoAwalHutang: 2_000_000 * inc,
+            saldoHutang: 5_000_000 * inc,
+            jatuhTempo: 35 * inc,
             contact: {
               create: {
                 nama: `supplier multi test ${inc}`,
                 alamat: 'Alamat ' + inc,
                 email: `ContactMulti${inc}@test.com`,
-                no_hp: `${inc}89723662`,
+                noHp: `${inc}89723662`,
               },
             },
           },
@@ -453,7 +453,7 @@ export class TestService {
         nama: 'gudang test',
         alamat: 'jl. in aja dulu',
         keterangan: 'gudang untuk test',
-        is_active: true,
+        isActive: true,
       },
     });
   }
@@ -474,7 +474,7 @@ export class TestService {
         nama: `gudang multi test ${inc}`,
         alamat: `Alamat multi test ${inc}`,
         keterangan: `Keterangan multi test`,
-        is_active: true,
+        isActive: true,
       });
     }
     await this.prismaService.gudang.createMany({

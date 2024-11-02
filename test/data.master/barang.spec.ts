@@ -12,7 +12,7 @@ describe('Barang Controller', () => {
   let app: INestApplication;
   let logger: Logger;
   let testService: TestService;
-  let token: { access_token: string };
+  let token: { accessToken: string };
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -42,7 +42,7 @@ describe('Barang Controller', () => {
       logger.info({ barang: barang });
       const response = await request(app.getHttpServer())
         .post('/api/barang')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send(barang);
 
       logger.info(JSON.stringify(response.body));
@@ -50,16 +50,16 @@ describe('Barang Controller', () => {
       expect(response.body.data).toBeDefined();
       expect(response.body.errors).toBeUndefined();
       expect(response.body.data.nama).toBe('test');
-      expect(response.body.data.jenis_barang).toBe(JenisBarang.Barang);
+      expect(response.body.data.jenisBarang).toBe(JenisBarang.Barang);
     });
 
     it('should reject if token wrong', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/kategori')
-        .set('Authorization', `Bearer ${token.access_token}salah`)
+        .set('Authorization', `Bearer ${token.accessToken}salah`)
         .send({
           nama: 'test',
-          jenis_barang: JenisBarang.Barang,
+          jenisBarang: JenisBarang.Barang,
         });
 
       logger.info(JSON.stringify(response.body));
@@ -80,7 +80,7 @@ describe('Barang Controller', () => {
       logger.info({ barang: barang });
       const response = await request(app.getHttpServer())
         .put('/api/barang/' + barang.id)
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send(barang);
 
       logger.info(JSON.stringify(response.body));
@@ -88,7 +88,7 @@ describe('Barang Controller', () => {
       expect(response.body.data).toBeDefined();
       expect(response.body.errors).toBeUndefined();
       expect(response.body.data.nama).toBe('test' + ' Updated');
-      expect(response.body.data.jenis_barang).toBe(JenisBarang.Barang);
+      expect(response.body.data.jenisBarang).toBe(JenisBarang.Barang);
     });
 
     it('should reject if token wrong', async () => {
@@ -96,7 +96,7 @@ describe('Barang Controller', () => {
       barang.nama = barang.nama + ' Updated';
       const response = await request(app.getHttpServer())
         .put('/api/kategori/' + barang.id)
-        .set('Authorization', `Bearer ${token.access_token}salah`)
+        .set('Authorization', `Bearer ${token.accessToken}salah`)
         .send(barang);
 
       logger.info(JSON.stringify(response.body));
@@ -110,7 +110,7 @@ describe('Barang Controller', () => {
       logger.info({ barang: barang });
       const response = await request(app.getHttpServer())
         .put('/api/barang/' + (barang.id + 1))
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send(barang);
 
       logger.info(JSON.stringify(response.body));
@@ -130,7 +130,7 @@ describe('Barang Controller', () => {
       logger.info({ barang: barang });
       const response = await request(app.getHttpServer())
         .delete('/api/barang/' + barang.id)
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(200);
@@ -145,7 +145,7 @@ describe('Barang Controller', () => {
       const barang = await testService.getBarangTest();
       const response = await request(app.getHttpServer())
         .delete('/api/kategori/' + barang.id)
-        .set('Authorization', `Bearer ${token.access_token}salah`);
+        .set('Authorization', `Bearer ${token.accessToken}salah`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(401);
@@ -157,7 +157,7 @@ describe('Barang Controller', () => {
       logger.info({ barang: barang });
       const response = await request(app.getHttpServer())
         .delete('/api/barang/' + (barang.id + 1))
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(404);
@@ -176,7 +176,7 @@ describe('Barang Controller', () => {
       logger.info({ barang: barang });
       const response = await request(app.getHttpServer())
         .get('/api/barang/' + barang.id)
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(200);
@@ -184,14 +184,14 @@ describe('Barang Controller', () => {
       expect(response.body.errors).toBeUndefined();
       expect(response.body.data.id).toBe(barang.id);
       expect(response.body.data.nama).toBe(barang.nama);
-      expect(response.body.data.satuan_id).toBe(barang.satuan_id);
+      expect(response.body.data.satuanId).toBe(barang.satuanId);
     });
 
     it('should reject if token wrong', async () => {
       const barang = await testService.getBarangTest();
       const response = await request(app.getHttpServer())
         .delete('/api/kategori/' + barang.id)
-        .set('Authorization', `Bearer ${token.access_token}salah`);
+        .set('Authorization', `Bearer ${token.accessToken}salah`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(401);
@@ -203,7 +203,7 @@ describe('Barang Controller', () => {
       logger.info({ barang: barang });
       const response = await request(app.getHttpServer())
         .delete('/api/barang/' + (barang.id + 1))
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(404);
@@ -223,7 +223,7 @@ describe('Barang Controller', () => {
     it('should be able to search barang with default query', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/barang')
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(200);
@@ -232,13 +232,13 @@ describe('Barang Controller', () => {
       expect(response.body.paging).toBeDefined();
       expect(response.body.paging.page).toBe(1);
       expect(response.body.paging.size).toBe(10);
-      expect(response.body.paging.total_page).toBeGreaterThan(0);
+      expect(response.body.paging.totalPage).toBeGreaterThan(0);
     });
 
     it('should be able to search barang with page parameter', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/barang')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           page: 2,
         });
@@ -250,18 +250,18 @@ describe('Barang Controller', () => {
       expect(response.body.paging).toBeDefined();
       expect(response.body.paging.page).toBe(2);
       expect(response.body.paging.size).toBe(10);
-      expect(response.body.paging.total_page).toBeGreaterThan(0);
+      expect(response.body.paging.totalPage).toBeGreaterThan(0);
     });
 
     it('should be able to search barang with page out of page', async () => {
       const totalBarang = await testService.getTotalBarang();
       const size = 5;
-      const total_page = Math.ceil(totalBarang / size);
+      const totalPage = Math.ceil(totalBarang / size);
       const response = await request(app.getHttpServer())
         .get('/api/barang')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
-          page: total_page + 1,
+          page: totalPage + 1,
           size: size,
         });
 
@@ -271,15 +271,15 @@ describe('Barang Controller', () => {
       expect(response.body.data.length).toBe(0);
       expect(response.body.errors).toBeUndefined();
       expect(response.body.paging).toBeDefined();
-      expect(response.body.paging.page).toBe(total_page + 1);
+      expect(response.body.paging.page).toBe(totalPage + 1);
       expect(response.body.paging.size).toBe(size);
-      expect(response.body.paging.total_page).toBe(total_page);
+      expect(response.body.paging.totalPage).toBe(totalPage);
     });
 
     it('should be able to search barang with parameter nama not found', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/barang')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           nama: 'GA ada',
         });
@@ -295,7 +295,7 @@ describe('Barang Controller', () => {
     it('should be able to search barang with nama paramater', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/barang')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           nama: 'Multi',
         });
@@ -308,13 +308,13 @@ describe('Barang Controller', () => {
       expect(response.body.paging).toBeDefined();
       expect(response.body.paging.page).toBe(1);
       expect(response.body.paging.size).toBe(10);
-      expect(response.body.paging.total_page).toBeGreaterThan(0);
+      expect(response.body.paging.totalPage).toBeGreaterThan(0);
     });
 
     it('should be able to search barang with satuan paramater', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/barang')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           satuan: 'test',
         });
@@ -330,7 +330,7 @@ describe('Barang Controller', () => {
     it('should be able to search barang with satuan paramater not found', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/barang')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           satuan: 'Gaada',
         });
@@ -346,7 +346,7 @@ describe('Barang Controller', () => {
     it('should be able to search barang with kategori paramater', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/barang')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           kategori: 'tes',
         });
@@ -362,7 +362,7 @@ describe('Barang Controller', () => {
     it('should be able to search barang with kategori paramater not found', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/barang')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           kategori: 'Gaada',
         });
@@ -378,7 +378,7 @@ describe('Barang Controller', () => {
     it('should be able to search barang with subkategori paramater', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/barang')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           subkategori: 'tes',
         });
@@ -394,7 +394,7 @@ describe('Barang Controller', () => {
     it('should be able to search barang with subkategori paramater not found', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/barang')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           subkategori: 'Gaada',
         });
@@ -410,7 +410,7 @@ describe('Barang Controller', () => {
     it('should be able to search barang with all query', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/barang')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           subkategori: 'test',
           kategori: 'test',
@@ -434,7 +434,7 @@ describe('Barang Controller', () => {
       const barang = await testService.getBarangTest();
       const response = await request(app.getHttpServer())
         .get('/api/barang')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           barang_id: barang.id,
           subkategori: 'test',
@@ -459,7 +459,7 @@ describe('Barang Controller', () => {
     it('should be reject if token wrong', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/barang')
-        .set('Authorization', `Bearer ${token.access_token}salah`);
+        .set('Authorization', `Bearer ${token.accessToken}salah`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(401);

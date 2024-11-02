@@ -29,24 +29,24 @@ export class BarangService {
     const barangResponse: BarangResponse = {
       id: barang.id,
       nama: barang.nama,
-      jenis_barang: barang.jenis_barang,
-      satuan_id: barang.satuan_id,
-      kategori_id: barang.kategori_id,
-      subkategori_id: barang.subkategori_id,
+      jenisBarang: barang.jenisBarang,
+      satuanId: barang.satuanId,
+      kategoriId: barang.kategoriId,
+      subkategoriId: barang.subkategoriId,
       hpp: barang.hpp.toNumber(),
-      harga_beli_akhir: barang.harga_beli_akhir.toNumber(),
-      harga_beli_3: barang.harga_beli_3.toNumber(),
-      harga_jual_1: barang.harga_jual_1.toNumber(),
-      harga_jual_2: barang.harga_jual_2.toNumber(),
-      harga_jual_3: barang.harga_jual_3.toNumber(),
+      hargaBeliAkhir: barang.hargaBeliAkhir.toNumber(),
+      hargaBeli_3: barang.hargaBeli_3.toNumber(),
+      hargaJual_1: barang.hargaJual_1.toNumber(),
+      hargaJual_2: barang.hargaJual_2.toNumber(),
+      hargaJual_3: barang.hargaJual_3.toNumber(),
       barcode: barang.barcode,
       expired: barang.expired,
-      diskon_rp: barang.diskon_rp.toNumber(),
-      diskon_persen: barang.diskon_persen.toNumber(),
-      jumlah_stok: barang.jumlah_stok.toNumber(),
-      jumlah_awal: barang.jumlah_awal.toNumber(),
+      diskonRp: barang.diskonRp.toNumber(),
+      diskonPersen: barang.diskonPersen.toNumber(),
+      jumlahStok: barang.jumlahStok.toNumber(),
+      jumlahAwal: barang.jumlahAwal.toNumber(),
       keterangan: barang.keterangan,
-      is_active: barang.is_active,
+      isActive: barang.isActive,
     };
 
     // Optionally map associated data if available
@@ -229,7 +229,7 @@ export class BarangService {
       paging: {
         page: searchRequest.page,
         size: searchRequest.size,
-        total_page: Math.ceil(total / searchRequest.size),
+        totalPage: Math.ceil(total / searchRequest.size),
       },
     };
   }

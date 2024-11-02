@@ -24,19 +24,19 @@ export class SupplierService {
 
   toSupplierResponse(supplier: Supplier, contact: Contact): SupplierResponse {
     return {
-      contact_id: supplier.contact_id,
+      contactId: supplier.contactId,
       contact: contact,
-      saldo_hutang: supplier.saldo_hutang.toNumber(),
-      saldo_awal_hutang: supplier.saldo_awal_hutang.toNumber(),
-      max_hutang: supplier.max_hutang.toNumber(),
-      jatuh_tempo: supplier.jatuh_tempo.toNumber(),
+      saldoHutang: supplier.saldoHutang.toNumber(),
+      saldoAwalHutang: supplier.saldoAwalHutang.toNumber(),
+      maxHutang: supplier.maxHutang.toNumber(),
+      jatuhTempo: supplier.jatuhTempo.toNumber(),
     };
   }
 
-  async getSupplierOr404(contact_id: number) {
+  async getSupplierOr404(contactId: number) {
     const supplier = await this.prismaService.supplier.findUnique({
       where: {
-        contact_id: contact_id,
+        contactId: contactId,
       },
       include: {
         contact: true,
@@ -55,9 +55,9 @@ export class SupplierService {
       this.validationService.validate(SupplierValidation.CREATE, request);
 
     let contact_data: Contact;
-    if (createRequest.contact_id) {
+    if (createRequest.contactId) {
       contact_data = await this.contactService.getContactOr404(
-        createRequest.contact_id,
+        createRequest.contactId,
       );
     } else {
       if (createRequest.contact) {
@@ -69,27 +69,27 @@ export class SupplierService {
 
     const supplier = await this.prismaService.supplier.create({
       data: {
-        contact_id: contact_data.id,
-        saldo_awal_hutang: createRequest.saldo_awal_hutang,
-        saldo_hutang: createRequest.saldo_hutang,
-        max_hutang: createRequest.max_hutang,
-        jatuh_tempo: createRequest.jatuh_tempo,
+        contactId: contact_data.id,
+        saldoAwalHutang: createRequest.saldoAwalHutang,
+        saldoHutang: createRequest.saldoHutang,
+        maxHutang: createRequest.maxHutang,
+        jatuhTempo: createRequest.jatuhTempo,
       },
     });
 
     return this.toSupplierResponse(supplier, contact_data);
   }
 
-  async detail(contact_id: number): Promise<SupplierResponse> {
-    const { contact, ...supplier } = await this.getSupplierOr404(contact_id);
+  async detail(contactId: number): Promise<SupplierResponse> {
+    const { contact, ...supplier } = await this.getSupplierOr404(contactId);
     return this.toSupplierResponse(supplier, contact);
   }
 
-  async delete(contact_id: number): Promise<SupplierResponse> {
-    const { contact, ...supplier } = await this.getSupplierOr404(contact_id);
+  async delete(contactId: number): Promise<SupplierResponse> {
+    const { contact, ...supplier } = await this.getSupplierOr404(contactId);
     await this.prismaService.supplier.delete({
       where: {
-        contact_id: contact_id,
+        contactId: contactId,
       },
     });
     return this.toSupplierResponse(supplier, contact);
@@ -99,11 +99,11 @@ export class SupplierService {
     const updateRequest: UpdateSupplierRequest =
       this.validationService.validate(SupplierValidation.UPDATE, request);
 
-    await this.getSupplierOr404(updateRequest.contact_id);
+    await this.getSupplierOr404(updateRequest.contactId);
     const { contact, ...supplier } = await this.prismaService.supplier.update({
       data: updateRequest,
       where: {
-        contact_id: updateRequest.contact_id,
+        contactId: updateRequest.contactId,
       },
       include: {
         contact: true,
@@ -143,7 +143,7 @@ export class SupplierService {
       },
     });
 
-    const total_page = Math.ceil(total / searchRequest.size);
+    const totalPage = Math.ceil(total / searchRequest.size);
     return {
       data: suppliers.map((supplierAndContact) => {
         const { contact, ...supplier } = supplierAndContact;
@@ -152,7 +152,7 @@ export class SupplierService {
       paging: {
         page: searchRequest.page,
         size: searchRequest.size,
-        total_page: total_page,
+        totalPage: totalPage,
       },
     };
   }

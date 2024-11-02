@@ -22,13 +22,13 @@ export class SubkategoriService {
     return {
       id: kategori.id,
       nama: kategori.nama,
-      jenis_barang: kategori.jenis_barang,
+      jenisBarang: kategori.jenisBarang,
     };
   }
 
-  async getSubkategoriOr404(subkategori_id: number) {
+  async getSubkategoriOr404(subkategoriId: number) {
     const subkategori = await this.prismaService.subKategoriBarang.findUnique({
-      where: { id: subkategori_id },
+      where: { id: subkategoriId },
     });
 
     if (!subkategori) {
@@ -47,7 +47,7 @@ export class SubkategoriService {
     let subkategori = await this.prismaService.subKategoriBarang.findFirst({
       where: {
         nama: createRequest.nama,
-        jenis_barang: createRequest.jenis_barang,
+        jenisBarang: createRequest.jenisBarang,
       },
     });
 
@@ -104,16 +104,16 @@ export class SubkategoriService {
       data: kategories,
       paging: {
         page: page,
-        total_page: totalPages,
+        totalPage: totalPages,
         size: size,
       },
     };
   }
 
-  async remove(kategori_id: number): Promise<SubkategoriResponse> {
-    let kategori = await this.getSubkategoriOr404(kategori_id);
+  async remove(kategoriId: number): Promise<SubkategoriResponse> {
+    let kategori = await this.getSubkategoriOr404(kategoriId);
     kategori = await this.prismaService.subKategoriBarang.delete({
-      where: { id: kategori_id },
+      where: { id: kategoriId },
     });
 
     return this.toSubkategoriResponse(kategori);
@@ -136,11 +136,11 @@ export class SubkategoriService {
       });
     }
 
-    if (searchRequest.jenis_barang) {
+    if (searchRequest.jenisBarang) {
       filters.push({
         AND: [
           {
-            jenis_barang: searchRequest.jenis_barang,
+            jenisBarang: searchRequest.jenisBarang,
           },
         ],
       });
@@ -182,7 +182,7 @@ export class SubkategoriService {
       paging: {
         page: searchRequest.page,
         size: searchRequest.size,
-        total_page: totalPages,
+        totalPage: totalPages,
       },
     };
   }

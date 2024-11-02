@@ -39,7 +39,7 @@ describe('Auth Controller', () => {
     it('should can create new contact', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/contacts')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           nama: 'contact test',
         });
@@ -53,12 +53,12 @@ describe('Auth Controller', () => {
     it('should can create new contact with all data', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/contacts')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           nama: 'contact test',
           alamat: 'jl. pegangsaan timur No. 56 Jakarta',
           email: 'test@test.com',
-          no_hp: '081611333010',
+          noHp: '081611333010',
         });
 
       logger.info(JSON.stringify(response.body));
@@ -70,7 +70,7 @@ describe('Auth Controller', () => {
     it('should reject if token invalid', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/contacts')
-        .set('Authorization', `Bearer ${token.access_token}salah`)
+        .set('Authorization', `Bearer ${token.accessToken}salah`)
         .send({
           nama: 'contact test',
         });
@@ -85,7 +85,7 @@ describe('Auth Controller', () => {
       await testService.createContactTest();
       const response = await request(app.getHttpServer())
         .post('/api/contacts')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           nama: 'contact test',
         });
@@ -99,7 +99,7 @@ describe('Auth Controller', () => {
     it('should can reject if nama invalid', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/contacts')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           nama: '',
         });
@@ -113,7 +113,7 @@ describe('Auth Controller', () => {
     it('should can reject if email invalid', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/contacts')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           nama: 'contact test',
           email: 'someonejhdc',
@@ -126,7 +126,7 @@ describe('Auth Controller', () => {
     });
   });
 
-  describe('GET /api/contacts/:contact_id', () => {
+  describe('GET /api/contacts/:contactId', () => {
     let contact: Contact;
 
     beforeEach(async () => {
@@ -138,7 +138,7 @@ describe('Auth Controller', () => {
     it('should can get contact', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/contacts/' + contact.id)
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(200);
@@ -147,14 +147,14 @@ describe('Auth Controller', () => {
       expect(response.body.data.id).toBe(contact.id);
       expect(response.body.data.nama).toBe(contact.nama);
       expect(response.body.data.alamat).toBe(contact.alamat);
-      expect(response.body.data.no_hp).toBe(contact.no_hp);
+      expect(response.body.data.noHp).toBe(contact.noHp);
       expect(response.body.data.email).toBe(contact.email);
     });
 
     it('should reject if token invalid', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/contacts/' + contact.id)
-        .set('Authorization', `Bearer ${token.access_token}salah`);
+        .set('Authorization', `Bearer ${token.accessToken}salah`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(401);
@@ -165,7 +165,7 @@ describe('Auth Controller', () => {
     it('should reject if data does not exists', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/contacts/' + (contact.id + 1))
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(404);
@@ -174,7 +174,7 @@ describe('Auth Controller', () => {
     });
   });
 
-  describe('PUT /api/contacts/:contact_id', () => {
+  describe('PUT /api/contacts/:contactId', () => {
     let contact: Contact;
 
     beforeEach(async () => {
@@ -186,11 +186,11 @@ describe('Auth Controller', () => {
     it('should can updated contact', async () => {
       const response = await request(app.getHttpServer())
         .put('/api/contacts/' + contact.id)
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           nama: contact.nama + ' updated',
           alamat: 'alamat updated',
-          no_hp: '081611333010',
+          noHp: '081611333010',
         });
 
       logger.info(JSON.stringify(response.body));
@@ -200,18 +200,18 @@ describe('Auth Controller', () => {
       expect(response.body.data.id).toBe(contact.id);
       expect(response.body.data.nama).toBe(contact.nama + ' updated');
       expect(response.body.data.alamat).toBe('alamat updated');
-      expect(response.body.data.no_hp).toBe('081611333010');
+      expect(response.body.data.noHp).toBe('081611333010');
       expect(response.body.data.email).toBe(contact.email);
     });
 
     it('should reject if token invalid', async () => {
       const response = await request(app.getHttpServer())
         .put('/api/contacts/' + contact.id)
-        .set('Authorization', `Bearer ${token.access_token}salah`)
+        .set('Authorization', `Bearer ${token.accessToken}salah`)
         .send({
           nama: contact.nama + ' updated',
           alamat: 'alamat updated',
-          no_hp: '081611333010',
+          noHp: '081611333010',
         });
 
       logger.info(JSON.stringify(response.body));
@@ -223,11 +223,11 @@ describe('Auth Controller', () => {
     it('should reject if token invalid', async () => {
       const response = await request(app.getHttpServer())
         .put('/api/contacts/' + contact.id)
-        .set('Authorization', `Bearer ${token.access_token}salah`)
+        .set('Authorization', `Bearer ${token.accessToken}salah`)
         .send({
           nama: contact.nama + ' updated',
           alamat: 'alamat updated',
-          no_hp: '081611333010',
+          noHp: '081611333010',
         });
 
       logger.info(JSON.stringify(response.body));
@@ -241,11 +241,11 @@ describe('Auth Controller', () => {
         await testService.createContactComplementTest('sudah ada test');
       const response = await request(app.getHttpServer())
         .put('/api/contacts/' + contact.id)
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           nama: contactComplement.nama,
           alamat: 'alamat updated',
-          no_hp: '081611333010',
+          noHp: '081611333010',
         });
 
       logger.info(JSON.stringify(response.body));
@@ -257,10 +257,10 @@ describe('Auth Controller', () => {
     it('should reject if data not exists', async () => {
       const response = await request(app.getHttpServer())
         .put('/api/contacts/' + (contact.id + 1))
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           alamat: 'alamat updated',
-          no_hp: '081611333010',
+          noHp: '081611333010',
         });
 
       logger.info(JSON.stringify(response.body));
@@ -270,7 +270,7 @@ describe('Auth Controller', () => {
     });
   });
 
-  describe('DELETE /api/contacts/:contact_id', () => {
+  describe('DELETE /api/contacts/:contactId', () => {
     let contact: Contact;
 
     beforeEach(async () => {
@@ -282,7 +282,7 @@ describe('Auth Controller', () => {
     it('should can delete contact', async () => {
       const response = await request(app.getHttpServer())
         .delete('/api/contacts/' + contact.id)
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(200);
@@ -291,14 +291,14 @@ describe('Auth Controller', () => {
       expect(response.body.data.id).toBe(contact.id);
       expect(response.body.data.nama).toBe(contact.nama);
       expect(response.body.data.alamat).toBe(contact.alamat);
-      expect(response.body.data.no_hp).toBe(contact.no_hp);
+      expect(response.body.data.noHp).toBe(contact.noHp);
       expect(response.body.data.email).toBe(contact.email);
     });
 
     it('should reject if token invalid', async () => {
       const response = await request(app.getHttpServer())
         .delete('/api/contacts/' + contact.id)
-        .set('Authorization', `Bearer ${token.access_token}salah`);
+        .set('Authorization', `Bearer ${token.accessToken}salah`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(401);
@@ -309,7 +309,7 @@ describe('Auth Controller', () => {
     it('should reject if data does not exists', async () => {
       const response = await request(app.getHttpServer())
         .delete('/api/contacts/' + (contact.id + 1))
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(404);
@@ -330,7 +330,7 @@ describe('Auth Controller', () => {
       await testService.createContactMulti(11);
       const response = await request(app.getHttpServer())
         .get('/api/contacts')
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(200);
@@ -342,7 +342,7 @@ describe('Auth Controller', () => {
     it('should reject if token invalid', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/contacts')
-        .set('Authorization', `Bearer ${token.access_token}salah`);
+        .set('Authorization', `Bearer ${token.accessToken}salah`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(401);
@@ -354,7 +354,7 @@ describe('Auth Controller', () => {
       await testService.createContactMulti(10);
       const response = await request(app.getHttpServer())
         .get('/api/contacts')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           nama: 'multi',
         });
@@ -370,7 +370,7 @@ describe('Auth Controller', () => {
       await testService.createContactMulti(10);
       const response = await request(app.getHttpServer())
         .get('/api/contacts')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           nama: 'tidak ada',
         });
@@ -382,13 +382,13 @@ describe('Auth Controller', () => {
       expect(response.body.data.length).toBe(0);
     });
 
-    it('should can search contact with no_hp query', async () => {
+    it('should can search contact with noHp query', async () => {
       await testService.createContactMulti(10);
       const response = await request(app.getHttpServer())
         .get('/api/contacts')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
-          no_hp: '3662231',
+          noHp: '3662231',
         });
 
       logger.info(JSON.stringify(response.body));
@@ -402,7 +402,7 @@ describe('Auth Controller', () => {
       await testService.createContactMulti(10);
       const response = await request(app.getHttpServer())
         .get('/api/contacts')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           alamat: 'Alamat',
         });
@@ -418,7 +418,7 @@ describe('Auth Controller', () => {
       await testService.createContactMulti(10);
       const response = await request(app.getHttpServer())
         .get('/api/contacts')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           email: '@test.com',
         });
@@ -434,12 +434,12 @@ describe('Auth Controller', () => {
       await testService.createContactMulti(10);
       const response = await request(app.getHttpServer())
         .get('/api/contacts')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           nama: 'multi',
           email: '@test.com',
           alamat: 'Alamat',
-          no_hp: '3662231',
+          noHp: '3662231',
           size: 5,
           page: 2,
         });
@@ -450,7 +450,7 @@ describe('Auth Controller', () => {
       expect(response.body.errors).toBeUndefined();
       expect(response.body.data.length).toBe(5);
       expect(response.body.paging).toBeDefined();
-      expect(response.body.paging.total_page).toBe(2);
+      expect(response.body.paging.totalPage).toBe(2);
     });
   });
 });

@@ -12,7 +12,7 @@ describe('Barang Controller', () => {
   let app: INestApplication;
   let logger: Logger;
   let testService: TestService;
-  let token: { access_token: string };
+  let token: { accessToken: string };
   const namaJenisPelanggan = 'jenis pelanggan pelanggan test';
 
   beforeEach(async () => {
@@ -48,7 +48,7 @@ describe('Barang Controller', () => {
     it('should be able to create pelanggan', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/pelanggans')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           contactId: contact.id,
           jenisPelangganId: jenisPelanggan.id,
@@ -70,7 +70,7 @@ describe('Barang Controller', () => {
     it('should be able to create pelanggan with default value', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/pelanggans')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           contactId: contact.id,
           jenisPelangganId: jenisPelanggan.id,
@@ -93,7 +93,7 @@ describe('Barang Controller', () => {
       await testService.deleteContactTest(namaJenisPelanggan);
       const response = await request(app.getHttpServer())
         .post('/api/pelanggans')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           contact: {
             nama: namaJenisPelanggan,
@@ -117,7 +117,7 @@ describe('Barang Controller', () => {
     it('should be rejected if token invalid', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/pelanggans')
-        .set('Authorization', `Bearer ${token.access_token}salah`)
+        .set('Authorization', `Bearer ${token.accessToken}salah`)
         .send({
           contactId: contact.id,
           jenisPelangganId: jenisPelanggan.id,
@@ -138,7 +138,7 @@ describe('Barang Controller', () => {
     it('should be rejected if data contact invalid', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/pelanggans')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           jenisPelangganId: jenisPelanggan.id,
           isCanCredit: true,
@@ -158,7 +158,7 @@ describe('Barang Controller', () => {
     it('should be rejected if data contact does not exists', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/pelanggans')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           contactId: contact.id + 1,
           jenisPelangganId: jenisPelanggan.id,
@@ -179,7 +179,7 @@ describe('Barang Controller', () => {
     it('should be rejected if data jenis pelanggan does not exists', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/pelanggans')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           contactId: contact.id,
           jenisPelangganId: jenisPelanggan.id + 1,
@@ -200,7 +200,7 @@ describe('Barang Controller', () => {
     it('should be rejected if data jenis pajak invalid', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/pelanggans')
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           contactId: contact.id,
           jenisPelangganId: jenisPelanggan.id,
@@ -229,7 +229,7 @@ describe('Barang Controller', () => {
     it('should be able to get pelanggan', async () => {
       const response = await request(app.getHttpServer())
         .get(`/api/pelanggans/${pelanggan.contactId}`)
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(200);
@@ -241,7 +241,7 @@ describe('Barang Controller', () => {
     it('should be reject if pelanggan not exists', async () => {
       const response = await request(app.getHttpServer())
         .get(`/api/pelanggans/${pelanggan.contactId + 1}`)
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(404);
@@ -252,7 +252,7 @@ describe('Barang Controller', () => {
     it('should be reject if token invalid', async () => {
       const response = await request(app.getHttpServer())
         .get(`/api/pelanggans/${pelanggan.contactId}`)
-        .set('Authorization', `Bearer ${token.access_token}salah`);
+        .set('Authorization', `Bearer ${token.accessToken}salah`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(401);
@@ -271,7 +271,7 @@ describe('Barang Controller', () => {
     it('should be able to delete pelanggan', async () => {
       const response = await request(app.getHttpServer())
         .delete(`/api/pelanggans/${pelanggan.contactId}`)
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(200);
@@ -286,7 +286,7 @@ describe('Barang Controller', () => {
     it('should be reject if pelanggan not exists', async () => {
       const response = await request(app.getHttpServer())
         .get(`/api/pelanggans/${pelanggan.contactId + 1}`)
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(404);
@@ -300,7 +300,7 @@ describe('Barang Controller', () => {
     it('should be reject if token invalid', async () => {
       const response = await request(app.getHttpServer())
         .get(`/api/pelanggans/${pelanggan.contactId}`)
-        .set('Authorization', `Bearer ${token.access_token}salah`);
+        .set('Authorization', `Bearer ${token.accessToken}salah`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(401);
@@ -322,7 +322,7 @@ describe('Barang Controller', () => {
     it('should be able to update pelanggan', async () => {
       const response = await request(app.getHttpServer())
         .put(`/api/pelanggans/${pelanggan.contactId}`)
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           isCanCredit: true,
           saldoPiutang: 2_000_000,
@@ -347,7 +347,7 @@ describe('Barang Controller', () => {
     it('should reject if jenis pelanggan not exists', async () => {
       const response = await request(app.getHttpServer())
         .put(`/api/pelanggans/${pelanggan.contactId}`)
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           jenisPelangganId: pelanggan.jenisPelangganId + 1,
           isCanCredit: true,
@@ -367,7 +367,7 @@ describe('Barang Controller', () => {
     it('should reject if jenis pajak invalid', async () => {
       const response = await request(app.getHttpServer())
         .put(`/api/pelanggans/${pelanggan.contactId}`)
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .send({
           jenisPelangganId: pelanggan.jenisPelangganId + 1,
           isCanCredit: true,
@@ -387,7 +387,7 @@ describe('Barang Controller', () => {
     it('should reject if token invalid', async () => {
       const response = await request(app.getHttpServer())
         .put(`/api/pelanggans/${pelanggan.contactId}`)
-        .set('Authorization', `Bearer ${token.access_token}salah`)
+        .set('Authorization', `Bearer ${token.accessToken}salah`)
         .send({
           jenisPelangganId: pelanggan.jenisPelangganId,
           isCanCredit: true,
@@ -414,7 +414,7 @@ describe('Barang Controller', () => {
       await testService.recreatePelangganMultiTest();
       const response = await request(app.getHttpServer())
         .get(`/api/pelanggans`)
-        .set('Authorization', `Bearer ${token.access_token}`);
+        .set('Authorization', `Bearer ${token.accessToken}`);
 
       logger.info(JSON.stringify(response.body));
       expect(response.status).toBe(200);
@@ -430,7 +430,7 @@ describe('Barang Controller', () => {
       await testService.recreatePelangganMultiTest();
       const response = await request(app.getHttpServer())
         .get(`/api/pelanggans`)
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           page: 2,
         });
@@ -443,14 +443,14 @@ describe('Barang Controller', () => {
       expect(response.body.paging).toBeDefined();
       expect(response.body.paging.page).toBe(2);
       expect(response.body.paging.size).toBe(10);
-      expect(response.body.paging.total_page).toBe(2);
+      expect(response.body.paging.totalPage).toBe(2);
     });
 
     it('should be able to get pelanggans on page 2 and size 3', async () => {
       await testService.recreatePelangganMultiTest();
       const response = await request(app.getHttpServer())
         .get(`/api/pelanggans`)
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           page: 2,
           size: 3,
@@ -464,14 +464,14 @@ describe('Barang Controller', () => {
       expect(response.body.paging).toBeDefined();
       expect(response.body.paging.page).toBe(2);
       expect(response.body.paging.size).toBe(3);
-      expect(response.body.paging.total_page).toBeGreaterThan(3);
+      expect(response.body.paging.totalPage).toBeGreaterThan(3);
     });
 
     it('should be able to get pelanggans with filter nama', async () => {
       await testService.recreatePelangganMultiTest();
       const response = await request(app.getHttpServer())
         .get(`/api/pelanggans`)
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           nama: 'multi',
         });
@@ -484,14 +484,14 @@ describe('Barang Controller', () => {
       expect(response.body.paging).toBeDefined();
       expect(response.body.paging.page).toBe(1);
       expect(response.body.paging.size).toBe(10);
-      expect(response.body.paging.total_page).toBe(1);
+      expect(response.body.paging.totalPage).toBe(1);
     });
 
     it('should be able to get pelanggans with filter nama gaada', async () => {
       await testService.recreatePelangganMultiTest();
       const response = await request(app.getHttpServer())
         .get(`/api/pelanggans`)
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           nama: 'gaada',
         });
@@ -504,14 +504,14 @@ describe('Barang Controller', () => {
       expect(response.body.paging).toBeDefined();
       expect(response.body.paging.page).toBe(1);
       expect(response.body.paging.size).toBe(10);
-      expect(response.body.paging.total_page).toBe(0);
+      expect(response.body.paging.totalPage).toBe(0);
     });
 
     it('should be able to get pelanggans with filter isCanCredit false', async () => {
       await testService.recreatePelangganMultiTest();
       const response = await request(app.getHttpServer())
         .get(`/api/pelanggans`)
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           isCanCredit: false,
         });
@@ -524,14 +524,14 @@ describe('Barang Controller', () => {
       expect(response.body.paging).toBeDefined();
       expect(response.body.paging.page).toBe(1);
       expect(response.body.paging.size).toBe(10);
-      expect(response.body.paging.total_page).toBe(1);
+      expect(response.body.paging.totalPage).toBe(1);
     });
 
     it('should be able to get pelanggans with filter isCanCredit true', async () => {
       await testService.recreatePelangganMultiTest();
       const response = await request(app.getHttpServer())
         .get(`/api/pelanggans`)
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           isCanCredit: true,
         });
@@ -544,14 +544,14 @@ describe('Barang Controller', () => {
       expect(response.body.paging).toBeDefined();
       expect(response.body.paging.page).toBe(1);
       expect(response.body.paging.size).toBe(10);
-      expect(response.body.paging.total_page).toBe(1);
+      expect(response.body.paging.totalPage).toBe(1);
     });
 
     it('should be able to get pelanggans with filter jenisPajak Non', async () => {
       await testService.recreatePelangganMultiTest();
       const response = await request(app.getHttpServer())
         .get(`/api/pelanggans`)
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           jenisPajak: JenisPajak.None,
         });
@@ -564,14 +564,14 @@ describe('Barang Controller', () => {
       expect(response.body.paging).toBeDefined();
       expect(response.body.paging.page).toBe(1);
       expect(response.body.paging.size).toBe(10);
-      expect(response.body.paging.total_page).toBe(0);
+      expect(response.body.paging.totalPage).toBe(0);
     });
 
     it('should be able to get pelanggans with filter jenisPajak Exclusive', async () => {
       await testService.recreatePelangganMultiTest();
       const response = await request(app.getHttpServer())
         .get(`/api/pelanggans`)
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           jenisPajak: JenisPajak.Exclusive,
         });
@@ -584,14 +584,14 @@ describe('Barang Controller', () => {
       expect(response.body.paging).toBeDefined();
       expect(response.body.paging.page).toBe(1);
       expect(response.body.paging.size).toBe(10);
-      expect(response.body.paging.total_page).toBe(0);
+      expect(response.body.paging.totalPage).toBe(0);
     });
 
     it('should be able to get pelanggans with filter jenisPajak Inclusive', async () => {
       await testService.recreatePelangganMultiTest();
       const response = await request(app.getHttpServer())
         .get(`/api/pelanggans`)
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           jenisPajak: JenisPajak.Inclusive,
         });
@@ -604,14 +604,14 @@ describe('Barang Controller', () => {
       expect(response.body.paging).toBeDefined();
       expect(response.body.paging.page).toBe(1);
       expect(response.body.paging.size).toBe(10);
-      expect(response.body.paging.total_page).toBe(2);
+      expect(response.body.paging.totalPage).toBe(2);
     });
 
     it('should be able to get pelanggans with filter jenisPelanggan gaada', async () => {
       await testService.recreatePelangganMultiTest();
       const response = await request(app.getHttpServer())
         .get(`/api/pelanggans`)
-        .set('Authorization', `Bearer ${token.access_token}`)
+        .set('Authorization', `Bearer ${token.accessToken}`)
         .query({
           jenisPelanggan: 'gaada',
         });
@@ -624,14 +624,14 @@ describe('Barang Controller', () => {
       expect(response.body.paging).toBeDefined();
       expect(response.body.paging.page).toBe(1);
       expect(response.body.paging.size).toBe(10);
-      expect(response.body.paging.total_page).toBe(0);
+      expect(response.body.paging.totalPage).toBe(0);
     });
 
     it('should be rejected if token invalid', async () => {
       await testService.recreatePelangganMultiTest();
       const response = await request(app.getHttpServer())
         .get(`/api/pelanggans`)
-        .set('Authorization', `Bearer ${token.access_token}salah`)
+        .set('Authorization', `Bearer ${token.accessToken}salah`)
         .query({
           jenisPelanggan: 'gaada',
         });

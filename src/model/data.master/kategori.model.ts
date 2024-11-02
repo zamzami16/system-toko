@@ -4,7 +4,7 @@ import { JenisBarang } from '@prisma/client';
 export class KategoriResponse {
   id: number;
   nama: string;
-  jenis_barang: JenisBarang;
+  jenisBarang: JenisBarang;
 }
 
 export class CreateKategoriRequest {
@@ -14,7 +14,7 @@ export class CreateKategoriRequest {
     enum: JenisBarang,
     isArray: false,
   })
-  jenis_barang: JenisBarang;
+  jenisBarang: JenisBarang;
 }
 
 export class UpdatekategoriRequest {
@@ -25,7 +25,7 @@ export class UpdatekategoriRequest {
     enum: JenisBarang,
     isArray: false,
   })
-  jenis_barang: JenisBarang;
+  jenisBarang: JenisBarang;
 }
 
 export class SearchkategoriRequest {
@@ -36,7 +36,7 @@ export class SearchkategoriRequest {
     enum: JenisBarang,
     isArray: false,
   })
-  jenis_barang?: JenisBarang;
+  jenisBarang?: JenisBarang;
   page?: number;
   size?: number;
 }

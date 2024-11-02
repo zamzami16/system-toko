@@ -22,13 +22,13 @@ export class SatuanService {
     return {
       id: satuan.id,
       nama: satuan.nama,
-      jenis_barang: satuan.jenis_barang,
+      jenisBarang: satuan.jenisBarang,
     };
   }
 
-  async getSatuanOr404(satuan_id: number) {
+  async getSatuanOr404(satuanId: number) {
     const satuan = await this.prismaService.satuanBarang.findUnique({
-      where: { id: satuan_id },
+      where: { id: satuanId },
     });
 
     if (!satuan) {
@@ -47,7 +47,7 @@ export class SatuanService {
     let satuan = await this.prismaService.satuanBarang.findFirst({
       where: {
         nama: createRequest.nama,
-        jenis_barang: createRequest.jenis_barang,
+        jenisBarang: createRequest.jenisBarang,
       },
     });
 
@@ -104,16 +104,16 @@ export class SatuanService {
       data: satuans,
       paging: {
         page: page,
-        total_page: totalPages,
+        totalPage: totalPages,
         size: size,
       },
     };
   }
 
-  async remove(satuan_id: number): Promise<SatuanResponse> {
-    let kategori = await this.getSatuanOr404(satuan_id);
+  async remove(satuanId: number): Promise<SatuanResponse> {
+    let kategori = await this.getSatuanOr404(satuanId);
     kategori = await this.prismaService.satuanBarang.delete({
-      where: { id: satuan_id },
+      where: { id: satuanId },
     });
 
     return this.toSatuanResponse(kategori);
@@ -138,11 +138,11 @@ export class SatuanService {
       });
     }
 
-    if (searchRequest.jenis_barang) {
+    if (searchRequest.jenisBarang) {
       filters.push({
         AND: [
           {
-            jenis_barang: searchRequest.jenis_barang,
+            jenisBarang: searchRequest.jenisBarang,
           },
         ],
       });
@@ -184,7 +184,7 @@ export class SatuanService {
       paging: {
         page: searchRequest.page,
         size: searchRequest.size,
-        total_page: totalPages,
+        totalPage: totalPages,
       },
     };
   }
