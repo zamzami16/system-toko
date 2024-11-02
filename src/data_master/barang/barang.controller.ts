@@ -20,7 +20,7 @@ import {
 import { WebResponse } from '../../model/web.response';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-@ApiTags("Barang")
+@ApiTags('Barang')
 @ApiBearerAuth()
 @Controller('/api/barang')
 export class BarangController {
@@ -77,6 +77,8 @@ export class BarangController {
   async search(
     @Query('barang_id', new ParseIntPipe({ optional: true }))
     barang_id?: number,
+    @Query('supplierContactId', new ParseIntPipe({ optional: true }))
+    supplierContactId?: number,
     @Query('size', new ParseIntPipe({ optional: true }))
     size?: number,
     @Query('page', new ParseIntPipe({ optional: true }))
@@ -94,6 +96,7 @@ export class BarangController {
       satuan: satuan,
       size: size || 10,
       page: page || 1,
+      supplierContactId: supplierContactId,
     };
 
     const result = await this.barangService.search(request);

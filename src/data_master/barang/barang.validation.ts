@@ -22,6 +22,7 @@ export class BarangValidation {
     jumlahAwal: z.number().default(0),
     keterangan: z.string().default(''),
     isActive: z.boolean(),
+    supplierContactId: z.number().positive(),
   });
 
   static readonly UPDATE: ZodType = z.object({
@@ -48,6 +49,7 @@ export class BarangValidation {
     jumlahAwal: z.number(),
     keterangan: z.string().default(''),
     isActive: z.boolean(),
+    supplierContactId: z.number().positive(),
   });
 
   static readonly SEARCH: ZodType = z.object({
@@ -58,5 +60,6 @@ export class BarangValidation {
     satuan: z.string().optional(),
     page: z.number().positive(),
     size: z.number().positive(),
+    supplierContactId: z.number().positive().optional(),
   });
 }

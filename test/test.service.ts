@@ -77,10 +77,12 @@ export class TestService {
     await this.deleteKategoriTest();
     await this.deleteSubkategoriTest();
     await this.deleteSatuanTest();
+    await this.deleteSupplierBarangTest();
 
     await this.createKategoriTest();
     await this.createSubkategoriTest();
     await this.createSatuanTest();
+    await this.createSupplierBarangTest();
   }
 
   async deleteKategoriTest() {
@@ -197,6 +199,56 @@ export class TestService {
     });
   }
 
+  async getSupplierBarangTest() {
+    return await this.prismaService.supplier.findFirst({
+      where: {
+        contact: {
+          nama: 'supplier barang test',
+        },
+      },
+    });
+  }
+
+  async createSupplierBarangTest() {
+    const supplier = await this.prismaService.supplier.create({
+      data: {
+        maxHutang: 2_000_000_000,
+        saldoAwalHutang: 2_000_000,
+        saldoHutang: 5_000_000,
+        jatuhTempo: 35,
+        contact: {
+          create: {
+            nama: 'supplier barang test',
+          },
+        },
+      },
+      include: {
+        contact: true,
+      },
+    });
+    return supplier;
+  }
+
+  async deleteSupplierBarangTest() {
+    await this.deleteSupplierTestInternal('supplier barang test');
+  }
+
+  async getAllSuppliers() {
+    return await this.prismaService.supplier.findMany({});
+  }
+
+  async getLastSupplierId() {
+    const suppliers = await this.getAllSuppliers();
+    const lastSupplierContactId =
+      suppliers.length > 0
+        ? suppliers.reduce(
+            (max, supplier) => Math.max(max, supplier.contactId),
+            0,
+          )
+        : 0;
+    return lastSupplierContactId;
+  }
+
   async deleteBarangTest() {
     await this.prismaService.barang.deleteMany({
       where: {
@@ -211,12 +263,14 @@ export class TestService {
     const kategori = await this.getKategoriTest();
     const subkategori = await this.getSubkategoriTest();
     const satuan = await this.getSatuanTest();
+    const supplier = await this.getSupplierBarangTest();
 
     const barang = new CreateBarangRequest();
     barang.nama = 'test';
     barang.kategoriId = kategori.id;
     barang.satuanId = satuan.id;
     barang.subkategoriId = subkategori.id;
+    barang.supplierContactId = supplier.contactId;
 
     return barang;
   }
@@ -281,6 +335,7 @@ export class TestService {
     b.nama = barang.nama;
     b.satuanId = barang.satuanId;
     b.subkategoriId = barang.subkategoriId;
+    b.supplierContactId = barang.supplierContactId;
     return {
       id: barang.id,
       ...b,

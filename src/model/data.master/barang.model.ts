@@ -33,6 +33,7 @@ export class BarangResponse {
   jumlahAwal: number = 0;
   keterangan: string = '';
   isActive: boolean = true;
+  supplierContactId: number;
 }
 
 export class CreateBarangRequest {
@@ -61,6 +62,7 @@ export class CreateBarangRequest {
   jumlahAwal: number = 0;
   keterangan: string = '';
   isActive: boolean = true;
+  supplierContactId: number;
 }
 
 export class UpdateBarangRequest {
@@ -89,6 +91,7 @@ export class UpdateBarangRequest {
   jumlahAwal: number;
   keterangan: string;
   isActive: boolean;
+  supplierContactId: number;
 }
 
 export class SearchBarangRequest {
@@ -97,6 +100,7 @@ export class SearchBarangRequest {
   kategori?: string;
   subkategori?: string;
   satuan?: string;
+  supplierContactId?: number;
   page: number = 1;
   size: number = 10;
 }

@@ -53,6 +53,35 @@ describe('Barang Controller', () => {
       expect(response.body.data.jenisBarang).toBe(JenisBarang.Barang);
     });
 
+    it('should reject if supplier invalid', async () => {
+      const barang = await testService.createBarang();
+      barang.supplierContactId = 0;
+      logger.info({ barang: barang });
+      const response = await request(app.getHttpServer())
+        .post('/api/barang')
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .send(barang);
+
+      logger.info(JSON.stringify(response.body));
+      expect(response.status).toBe(400);
+      expect(response.body.errors).toBeDefined();
+    });
+
+    it('should reject if supplier not exists', async () => {
+      const barang = await testService.createBarang();
+      const lastSupplierContactId = await testService.getLastSupplierId();
+      barang.supplierContactId = lastSupplierContactId + 1;
+      logger.info({ barang: barang });
+      const response = await request(app.getHttpServer())
+        .post('/api/barang')
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .send(barang);
+
+      logger.info(JSON.stringify(response.body));
+      expect(response.status).toBe(404);
+      expect(response.body.errors).toBeDefined();
+    });
+
     it('should reject if token wrong', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/kategori')
@@ -110,6 +139,23 @@ describe('Barang Controller', () => {
       logger.info({ barang: barang });
       const response = await request(app.getHttpServer())
         .put('/api/barang/' + (barang.id + 1))
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .send(barang);
+
+      logger.info(JSON.stringify(response.body));
+      expect(response.status).toBe(404);
+      expect(response.body.errors).toBeDefined();
+    });
+
+    it('should reject if barang supplier does not exists', async () => {
+      const barang = await testService.getBarangTest();
+      barang.nama = barang.nama + ' Updated';
+      const lastSupplierContactId = await testService.getLastSupplierId();
+
+      barang.supplierContactId = lastSupplierContactId + 1;
+      logger.info({ barang: barang });
+      const response = await request(app.getHttpServer())
+        .put('/api/barang/' + barang.id)
         .set('Authorization', `Bearer ${token.accessToken}`)
         .send(barang);
 
@@ -210,8 +256,6 @@ describe('Barang Controller', () => {
       expect(response.body.errors).toBeDefined();
     });
   });
-
-  // TODO: implement test for search barang API
 
   describe('GET /api/barang', () => {
     beforeEach(async () => {
@@ -371,6 +415,41 @@ describe('Barang Controller', () => {
       expect(response.status).toBe(200);
       expect(response.body.data).toBeDefined();
       expect(response.body.data.length).toBe(0);
+      expect(response.body.errors).toBeUndefined();
+      expect(response.body.paging).toBeDefined();
+    });
+
+    it('should be able to search barang with supplierContactId paramater not found', async () => {
+      const lastSupplierContactId = await testService.getLastSupplierId();
+
+      const response = await request(app.getHttpServer())
+        .get('/api/barang')
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .query({
+          supplierContactId: lastSupplierContactId + 1,
+        });
+
+      logger.info(JSON.stringify(response.body));
+      expect(response.status).toBe(200);
+      expect(response.body.data).toBeDefined();
+      expect(response.body.data.length).toBe(0);
+      expect(response.body.errors).toBeUndefined();
+      expect(response.body.paging).toBeDefined();
+    });
+
+    it('should be able to search barang with supplier paramater', async () => {
+      const barang = await testService.getBarangTest();
+      const response = await request(app.getHttpServer())
+        .get('/api/barang')
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .query({
+          supplierContactId: barang.supplierContactId,
+        });
+
+      logger.info(JSON.stringify(response.body));
+      expect(response.status).toBe(200);
+      expect(response.body.data).toBeDefined();
+      expect(response.body.data.length).toBeGreaterThan(1);
       expect(response.body.errors).toBeUndefined();
       expect(response.body.paging).toBeDefined();
     });
