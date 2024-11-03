@@ -4,6 +4,22 @@ import { KategoriResponse } from './kategori.model';
 import { SubkategoriResponse } from './subkategori.model';
 import { ApiProperty } from '@nestjs/swagger';
 
+export class CreateDetailSatuanRequestDto {
+  satuanId: number;
+  amount: number;
+}
+
+export class UpdateDetailSatuanRequestDto extends CreateDetailSatuanRequestDto {
+  barangId: number;
+}
+
+export class DetailSatuanResponse {
+  barangId: number;
+  satuanId: number;
+  amount: number;
+  satun: SatuanResponse;
+}
+
 export class BarangResponse {
   id: number;
   nama: string;
@@ -34,6 +50,7 @@ export class BarangResponse {
   keterangan: string = '';
   isActive: boolean = true;
   supplierContactId: number;
+  detailSatuans: DetailSatuanResponse[];
 }
 
 export class CreateBarangRequest {
@@ -63,6 +80,7 @@ export class CreateBarangRequest {
   keterangan: string = '';
   isActive: boolean = true;
   supplierContactId: number;
+  detailSatuans: CreateDetailSatuanRequestDto[];
 }
 
 export class UpdateBarangRequest {
@@ -92,6 +110,7 @@ export class UpdateBarangRequest {
   keterangan: string;
   isActive: boolean;
   supplierContactId: number;
+  detailSatuans: UpdateDetailSatuanRequestDto[];
 }
 
 export class SearchBarangRequest {

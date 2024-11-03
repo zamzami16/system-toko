@@ -7,6 +7,7 @@ import { TestService } from '../test.service';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import * as request from 'supertest';
 import { JenisBarang } from '@prisma/client';
+import { UpdateBarangRequest } from '../../src/model/data.master/barang.model';
 
 describe('Barang Controller', () => {
   let app: INestApplication;
@@ -82,6 +83,23 @@ describe('Barang Controller', () => {
       expect(response.body.errors).toBeDefined();
     });
 
+    it('should reject if satuan not exists', async () => {
+      const barang = await testService.createBarang();
+      const lastSatuanId = await testService.getLastSatuanId();
+      barang.satuanId = lastSatuanId + 1;
+      barang.detailSatuans[0].satuanId = barang.satuanId;
+
+      logger.info({ barang: barang });
+      const response = await request(app.getHttpServer())
+        .post('/api/barang')
+        .set('Authorization', `Bearer ${token.accessToken}`)
+        .send(barang);
+
+      logger.info(JSON.stringify(response.body));
+      expect(response.status).toBe(400);
+      expect(response.body.errors).toBeDefined();
+    });
+
     it('should reject if token wrong', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/kategori')
@@ -98,13 +116,15 @@ describe('Barang Controller', () => {
   });
 
   describe('PUT /api/barang/:barang_id', () => {
+    let barang: UpdateBarangRequest;
+
     beforeEach(async () => {
       await testService.deleteBarangTest();
       await testService.createBarangTest();
+      barang = await testService.getBarangTest();
     });
 
     it('should be able to update barang', async () => {
-      const barang = await testService.getBarangTest();
       barang.nama = barang.nama + ' Updated';
       logger.info({ barang: barang });
       const response = await request(app.getHttpServer())
@@ -121,7 +141,6 @@ describe('Barang Controller', () => {
     });
 
     it('should reject if token wrong', async () => {
-      const barang = await testService.getBarangTest();
       barang.nama = barang.nama + ' Updated';
       const response = await request(app.getHttpServer())
         .put('/api/kategori/' + barang.id)
@@ -134,7 +153,6 @@ describe('Barang Controller', () => {
     });
 
     it('should reject if barang does not exists', async () => {
-      const barang = await testService.getBarangTest();
       barang.nama = barang.nama + ' Updated';
       logger.info({ barang: barang });
       const response = await request(app.getHttpServer())
@@ -148,7 +166,6 @@ describe('Barang Controller', () => {
     });
 
     it('should reject if barang supplier does not exists', async () => {
-      const barang = await testService.getBarangTest();
       barang.nama = barang.nama + ' Updated';
       const lastSupplierContactId = await testService.getLastSupplierId();
 

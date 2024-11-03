@@ -4,6 +4,8 @@ import * as bcrypt from 'bcrypt';
 import { AuthService } from '../src/auth/auth.service';
 import { AuthSignIn } from '../src/model/auth.model';
 import {
+  Barang,
+  DetailSatuan,
   JenisBarang,
   JenisPajak,
   Kas,
@@ -249,14 +251,43 @@ export class TestService {
     return lastSupplierContactId;
   }
 
+  async getAllSatuans() {
+    return await this.prismaService.satuanBarang.findMany();
+  }
+
+  async getLastSatuanId() {
+    const satuans = await this.getAllSatuans();
+    const lastSatuanId =
+      satuans.length > 0
+        ? satuans.reduce((max, satuan) => Math.max(max, satuan.id), 0)
+        : 0;
+    return lastSatuanId;
+  }
+
   async deleteBarangTest() {
-    await this.prismaService.barang.deleteMany({
+    await this.deleteBarangTestInternal('test');
+  }
+
+  async deleteBarangTestInternal(name: string) {
+    const deleteDetailSatuan = this.prismaService.detailSatuan.deleteMany({
       where: {
-        nama: {
-          contains: 'test',
+        barang: {
+          nama: {
+            contains: name,
+          },
         },
       },
     });
+
+    const deleteBarang = this.prismaService.barang.deleteMany({
+      where: {
+        nama: {
+          contains: name,
+        },
+      },
+    });
+
+    await this.prismaService.$transaction([deleteDetailSatuan, deleteBarang]);
   }
 
   async createBarang(): Promise<CreateBarangRequest> {
@@ -264,6 +295,7 @@ export class TestService {
     const subkategori = await this.getSubkategoriTest();
     const satuan = await this.getSatuanTest();
     const supplier = await this.getSupplierBarangTest();
+    const detailSatuans = [{ satuanId: satuan.id, amount: 1 }];
 
     const barang = new CreateBarangRequest();
     barang.nama = 'test';
@@ -271,6 +303,7 @@ export class TestService {
     barang.satuanId = satuan.id;
     barang.subkategoriId = subkategori.id;
     barang.supplierContactId = supplier.contactId;
+    barang.detailSatuans = detailSatuans;
 
     return barang;
   }
@@ -278,44 +311,48 @@ export class TestService {
   async createBarangTest() {
     const barang = await this.createBarang();
     barang.barcode = randomUUID().replace('-', '');
-    await this.prismaService.barang.create({
-      data: barang,
+
+    await this.createBarangTestInternal(barang);
+  }
+
+  async createBarangTestInternal(barang: any) {
+    const { detailSatuans, ...dataBarang } = barang;
+    const saved = await this.prismaService.barang.create({
+      data: dataBarang,
+    });
+
+    const dataDetailSatuans = detailSatuans.map((item) => {
+      return {
+        barangId: saved.id,
+        satuanId: item.satuanId,
+        amount: item.amount,
+      };
+    });
+
+    await this.prismaService.detailSatuan.createMany({
+      data: dataDetailSatuans,
     });
   }
 
   async deleteBarangMultiTest() {
-    await this.prismaService.barang.deleteMany({
-      where: {
-        nama: {
-          contains: 'Multi',
-          mode: 'insensitive',
-        },
-      },
-    });
+    await this.deleteBarangTestInternal('Multi');
   }
 
   async createBarangMultiTest(total: number = 16) {
     await this.deleteBarangMultiTest();
-    const barangs = [];
+
     for (let i = 0; i < total; i++) {
       const barang = await this.createBarang();
       barang.nama = `Barang Multi ${i + 1}`;
       barang.barcode = randomUUID().replace('-', '');
-      barangs.push(barang);
+
+      await this.createBarangTestInternal(barang);
     }
-    await this.prismaService.barang.createMany({
-      data: barangs,
-    });
   }
 
-  async getBarangTest(): Promise<UpdateBarangRequest> {
-    const barang = await this.prismaService.barang.findFirst({
-      where: {
-        nama: 'test',
-      },
-    });
-
-    const b = await this.createBarang();
+  toUpdateBarangRequest = (barang: Barang, detailSatuans: DetailSatuan[]) => {
+    const b = new UpdateBarangRequest();
+    b.id = barang.id;
     b.barcode = barang.barcode;
     b.diskonPersen = barang.diskonPersen.toNumber();
     b.diskonRp = barang.diskonRp.toNumber();
@@ -336,10 +373,29 @@ export class TestService {
     b.satuanId = barang.satuanId;
     b.subkategoriId = barang.subkategoriId;
     b.supplierContactId = barang.supplierContactId;
-    return {
-      id: barang.id,
-      ...b,
-    };
+    b.detailSatuans = detailSatuans.map((item) => {
+      return {
+        barangId: item.barangId,
+        satuanId: item.satuanId,
+        amount: item.amount.toNumber(),
+      };
+    });
+
+    return b;
+  };
+
+  async getBarangTest(): Promise<UpdateBarangRequest> {
+    const { detailSatuans, ...barang } =
+      await this.prismaService.barang.findFirst({
+        where: {
+          nama: 'test',
+        },
+        include: {
+          detailSatuans: true,
+        },
+      });
+
+    return this.toUpdateBarangRequest(barang, detailSatuans);
   }
 
   async isBarangExists(barang_id: number) {
