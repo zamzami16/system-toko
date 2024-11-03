@@ -5,6 +5,7 @@ import { SubkategoriService } from '../subkategori/subkategori.service';
 import {
   BarangResponse,
   CreateBarangRequest,
+  DetailSatuanResponse,
   SearchBarangRequest,
   UpdateBarangRequest,
 } from '../../model/data.master/barang.model';
@@ -12,7 +13,7 @@ import { ValidationService } from '../../common/validation.service';
 import { BarangValidation } from './barang.validation';
 import { SatuanService } from '../satuan/satuan.service';
 import { randomUUID } from 'crypto';
-import { Barang, Supplier } from '@prisma/client';
+import { $Enums, Barang, Supplier } from '@prisma/client';
 import { WebResponse } from '../../model/web.response';
 import { NotFoundError } from '../../common/toko.exceptions';
 
@@ -26,7 +27,7 @@ export class BarangService {
     private satuanService: SatuanService,
   ) {}
 
-  toBarangResponse(barang: any): BarangResponse {
+  toBarangResponse(barang: any, detailSatuans: any = null): BarangResponse {
     const barangResponse: BarangResponse = {
       id: barang.id,
       nama: barang.nama,
@@ -49,6 +50,16 @@ export class BarangService {
       keterangan: barang.keterangan,
       isActive: barang.isActive,
       supplierContactId: barang.supplierContactId,
+      detailSatuans: [
+        {
+          barangId: barang.id,
+          satuanId: barang.satuanId,
+          amount: 1,
+          satun: !barang.satuan
+            ? null
+            : this.satuanService.toSatuanResponse(barang.satuan),
+        },
+      ],
     };
 
     // Optionally map associated data if available
@@ -65,6 +76,25 @@ export class BarangService {
     if (barang.subkategories) {
       barangResponse.subkategori =
         this.subkategoriService.toSubkategoriResponse(barang.subkategories);
+    }
+
+    if (detailSatuans) {
+      barangResponse.detailSatuans = detailSatuans.map(
+        (item: {
+          barangId: number;
+          satuanId: number;
+          amount: { toNumber: () => number };
+          satuan: { id: number; nama: string; jenisBarang: $Enums.JenisBarang };
+        }) => {
+          const detail = new DetailSatuanResponse();
+          detail.barangId = item.barangId;
+          detail.satuanId = item.satuanId;
+          detail.amount = item.amount.toNumber();
+          detail.satun = this.satuanService.toSatuanResponse(item.satuan);
+
+          return detail;
+        },
+      );
     }
 
     return barangResponse;
@@ -105,14 +135,12 @@ export class BarangService {
   }
 
   async create(request: CreateBarangRequest): Promise<BarangResponse> {
-    const createRequest: CreateBarangRequest = this.validationService.validate(
-      BarangValidation.CREATE,
-      request,
-    );
+    const validatedCreateRequest: CreateBarangRequest =
+      this.validationService.validate(BarangValidation.CREATE, request);
 
-    if (createRequest.barcode.toUpperCase() !== 'OTOMATIS') {
+    if (validatedCreateRequest.barcode.toUpperCase() !== 'OTOMATIS') {
       const baracodeBarangExists = await this.getBarangFromBarcode(
-        createRequest.barcode,
+        validatedCreateRequest.barcode,
       );
 
       if (baracodeBarangExists) {
@@ -123,9 +151,9 @@ export class BarangService {
       }
     } else {
       while (true) {
-        createRequest.barcode = randomUUID().replace('-', '');
+        validatedCreateRequest.barcode = randomUUID().replace('-', '');
         const baracodeBarangExists = await this.getBarangFromBarcode(
-          createRequest.barcode,
+          validatedCreateRequest.barcode,
         );
         if (!baracodeBarangExists) {
           break;
@@ -133,11 +161,11 @@ export class BarangService {
       }
     }
 
-    await this.getSupplierBarangOr404(createRequest.supplierContactId);
+    await this.getSupplierBarangOr404(validatedCreateRequest.supplierContactId);
 
     const exists_barang = await this.prismaService.barang.findFirst({
       where: {
-        nama: createRequest.nama,
+        nama: validatedCreateRequest.nama,
       },
     });
 
@@ -148,45 +176,86 @@ export class BarangService {
       );
     }
 
-    const barang = await this.prismaService.barang.create({
-      data: createRequest,
-      include: {
-        kategories: true,
-        subkategories: true,
-        satuan: true,
+    const { detailSatuans, ...dataBarang } = validatedCreateRequest;
+    const [barang, savedDetailSatuan] = await this.prismaService.$transaction(
+      async (prisma) => {
+        const barang = await prisma.barang.create({
+          data: dataBarang,
+          include: {
+            kategories: true,
+            subkategories: true,
+            satuan: true,
+          },
+        });
+
+        const detailSatuanData = detailSatuans.map((detail) => ({
+          ...detail,
+          barangId: barang.id,
+        }));
+
+        const savedDetailSatuan = await prisma.detailSatuan.createManyAndReturn(
+          {
+            data: detailSatuanData,
+            include: {
+              satuan: true,
+            },
+          },
+        );
+
+        return [barang, savedDetailSatuan];
       },
-    });
-    return this.toBarangResponse(barang);
+    );
+
+    return this.toBarangResponse(barang, savedDetailSatuan);
   }
 
   async update(request: UpdateBarangRequest): Promise<BarangResponse> {
-    const updatedRequest: UpdateBarangRequest = this.validationService.validate(
-      BarangValidation.UPDATE,
-      request,
-    );
+    const validatedUpdatedRequest: UpdateBarangRequest =
+      this.validationService.validate(BarangValidation.UPDATE, request);
 
-    let barang = await this.getBarangOr404(updatedRequest.id);
-    if (updatedRequest.supplierContactId !== barang.supplierContactId) {
-      await this.getSupplierBarangOr404(updatedRequest.supplierContactId);
+    const barang = await this.getBarangOr404(validatedUpdatedRequest.id);
+    if (
+      validatedUpdatedRequest.supplierContactId !== barang.supplierContactId
+    ) {
+      await this.getSupplierBarangOr404(
+        validatedUpdatedRequest.supplierContactId,
+      );
     }
 
-    barang = await this.prismaService.barang.update({
-      data: updatedRequest,
-      where: {
-        id: updatedRequest.id,
-      },
-      include: {
-        kategories: true,
-        subkategories: true,
-        satuan: true,
-      },
-    });
+    const { detailSatuans, ...updateBarangRequest } = validatedUpdatedRequest;
+    const [updatedBarang, savedDetailSatuan] =
+      await this.prismaService.$transaction(async (prisma) => {
+        await prisma.detailSatuan.deleteMany({
+          where: {
+            barangId: updateBarangRequest.id,
+          },
+        });
 
-    if (!barang) {
-      throw new HttpException(`Barang not found.`, 400);
-    }
+        const savedDetailSatuan = await prisma.detailSatuan.createManyAndReturn(
+          {
+            data: detailSatuans,
+            include: {
+              satuan: true,
+            },
+          },
+        );
 
-    return this.toBarangResponse(barang);
+        const barang = await prisma.barang.update({
+          data: updateBarangRequest,
+          where: {
+            id: validatedUpdatedRequest.id,
+          },
+          include: {
+            kategories: true,
+            subkategories: true,
+            satuan: true,
+          },
+        });
+
+        return [barang, savedDetailSatuan];
+      });
+
+    return this.toBarangResponse(updatedBarang, savedDetailSatuan);
   }
 
   async remove(barang_id: number): Promise<BarangResponse> {
@@ -205,18 +274,24 @@ export class BarangService {
   }
 
   async detail(barang_id: number): Promise<BarangResponse> {
-    let barang = await this.getBarangOr404(barang_id);
-    barang = await this.prismaService.barang.findUnique({
-      where: {
-        id: barang_id,
-      },
-      include: {
-        kategories: true,
-        subkategories: true,
-        satuan: true,
-      },
-    });
-    return this.toBarangResponse(barang);
+    await this.getBarangOr404(barang_id);
+    const { detailSatuans, ...barang } =
+      await this.prismaService.barang.findUnique({
+        where: {
+          id: barang_id,
+        },
+        include: {
+          kategories: true,
+          subkategories: true,
+          satuan: true,
+          detailSatuans: {
+            include: {
+              satuan: true,
+            },
+          },
+        },
+      });
+    return this.toBarangResponse(barang, detailSatuans);
   }
 
   async search(

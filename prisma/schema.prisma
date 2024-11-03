@@ -67,10 +67,22 @@ model SatuanBarang {
   nama        String      @db.VarChar(200)
   jenisBarang JenisBarang @default(Barang) @map("jenis_barang")
 
-  barangs Barang[]
-  gudangs DetailGudang[]
+  barangs       Barang[]
+  gudangs       DetailGudang[]
+  detailSatuans DetailSatuan[]
 
   @@map("satuan_barangs")
+}
+
+model DetailSatuan {
+  barangId Int          @map("barang_id")
+  barang   Barang       @relation(fields: [barangId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  satuanId Int          @map("satuan_id")
+  satuan   SatuanBarang @relation(fields: [satuanId], references: [id])
+  amount   Decimal      @db.Decimal(18, 3)
+
+  @@id([barangId, satuanId])
+  @@map("detail_satuans")
 }
 
 model Rak {
@@ -109,7 +121,8 @@ model Barang {
   supplierContactId Int      @map("supplier_contact_id")
   supplier          Supplier @relation(fields: [supplierContactId], references: [contactId])
 
-  gudangs DetailGudang[]
+  gudangs       DetailGudang[]
+  detailSatuans DetailSatuan[]
 
   @@map("barangs")
 }
@@ -148,7 +161,7 @@ model DetailGudang {
   berat         Decimal @default(0)
 
   satuans SatuanBarang @relation(fields: [satuanId], references: [id], onUpdate: Cascade)
-  barangs Barang       @relation(fields: [barangId], references: [id], onUpdate: Cascade)
+  barangs Barang       @relation(fields: [barangId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   gudangs Gudang       @relation(fields: [gudangId], references: [id], onUpdate: Cascade)
 
   @@id([barangId, gudangId, satuanId])
