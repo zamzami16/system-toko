@@ -3,22 +3,13 @@ import { SatuanResponse } from './satuan.model';
 import { KategoriResponse } from './kategori.model';
 import { SubkategoriResponse } from './subkategori.model';
 import { ApiProperty } from '@nestjs/swagger';
-
-export class CreateDetailSatuanRequestDto {
-  satuanId: number;
-  amount: number;
-}
-
-export class UpdateDetailSatuanRequestDto extends CreateDetailSatuanRequestDto {
-  barangId: number;
-}
-
-export class DetailSatuanResponse {
-  barangId: number;
-  satuanId: number;
-  amount: number;
-  satun: SatuanResponse;
-}
+import {
+  CreateDetailGudangRequestDto,
+  CreateDetailSatuanRequestDto,
+  DetailGudangResponse,
+  DetailSatuanResponse,
+  UpdateDetailSatuanRequestDto,
+} from './property.barang.model';
 
 export class BarangResponse {
   id: number;
@@ -51,6 +42,7 @@ export class BarangResponse {
   isActive: boolean = true;
   supplierContactId: number;
   detailSatuans: DetailSatuanResponse[];
+  detailGudangs: DetailGudangResponse[];
 }
 
 export class CreateBarangRequest {
@@ -81,6 +73,7 @@ export class CreateBarangRequest {
   isActive: boolean = true;
   supplierContactId: number;
   detailSatuans: CreateDetailSatuanRequestDto[];
+  detailGudangs: CreateDetailGudangRequestDto[];
 }
 
 export class UpdateBarangRequest {

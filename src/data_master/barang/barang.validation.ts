@@ -12,6 +12,12 @@ export const UpdateDetailSatuanSchema = z.object({
   amount: z.number().positive(),
 });
 
+export const CreateDetailGudangSchema = z.object({
+  satuanId: z.number().positive(),
+  gudangId: z.number().positive(),
+  jumlah: z.number().positive(),
+});
+
 const uniqueDetailSatuan = (details: { satuanId: any; amount: any }[]) => {
   const uniqueItems = new Set(
     details.map(({ satuanId, amount }) => `${satuanId}-${amount}`),
@@ -38,16 +44,50 @@ const hasOneDefaultDetailSatuan = (data: any, ctx: any) => {
 const validateUpdateDetailSatuanConditions = (data: any, ctx: any) => {
   hasOneDefaultDetailSatuan(data, ctx);
 
-  const hasSameBarangId = data.detailSatuans.filter(
-    (item: { satuanId: any }) => item.satuanId !== data.id,
+  const hasDifferentBarangId = data.detailSatuans.filter(
+    (item: { barangId: any }) => item.barangId !== data.id,
   );
 
-  if (hasSameBarangId.length !== 1) {
+  if (hasDifferentBarangId.length !== 0) {
     ctx.addIssue({
       code: 'custom',
       path: ['detailSatuans'],
       message: 'All detailSatuans must have the same barangId',
     });
+  }
+};
+
+const uniqueDetailGudang = (
+  details: { satuanId: number; gudangId: number }[],
+) => {
+  if (!details) {
+    return true;
+  }
+
+  const uniqueItems = new Set(
+    details.map(({ satuanId, gudangId }) => `${satuanId}-${gudangId}`),
+  );
+  return uniqueItems.size === details.length;
+};
+
+const detailGudangsShouldSameOnSatuanId = (data: any, ctx: any) => {
+  const otherSatuanId = data.detailGudangs.filter(
+    (item: { satuanId: number }) => item.satuanId !== data.satuanId,
+  );
+
+  if (otherSatuanId.length !== 0) {
+    ctx.addIssue({
+      code: 'custom',
+      path: ['detailGudangs'],
+      message: 'All detailGudangs must have the same satuanId',
+    });
+  }
+};
+
+const validateCreateBarangConditions = (data: any, ctx: any) => {
+  hasOneDefaultDetailSatuan(data, ctx);
+  if (data.detailGudangs) {
+    detailGudangsShouldSameOnSatuanId(data, ctx);
   }
 };
 
@@ -80,8 +120,15 @@ export class BarangValidation {
           message:
             'Each item in detailSatuans must be unique based on satuanId and amount',
         }),
+      detailGudangs: z
+        .array(CreateDetailGudangSchema)
+        .optional()
+        .refine(uniqueDetailGudang, {
+          message:
+            'Each item in detailGudangs must be unique based on satuanId and gudangId',
+        }),
     })
-    .superRefine(hasOneDefaultDetailSatuan);
+    .superRefine(validateCreateBarangConditions);
 
   static readonly UPDATE: ZodType = z
     .object({
