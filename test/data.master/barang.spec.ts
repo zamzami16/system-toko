@@ -52,6 +52,7 @@ describe('Barang Controller', () => {
       expect(response.body.errors).toBeUndefined();
       expect(response.body.data.nama).toBe('test');
       expect(response.body.data.jenisBarang).toBe(JenisBarang.Barang);
+      expect(response.body.data.detailGudangs).toBeTruthy();
     });
 
     it('should reject if supplier invalid', async () => {
@@ -154,6 +155,7 @@ describe('Barang Controller', () => {
 
     it('should reject if barang does not exists', async () => {
       barang.nama = barang.nama + ' Updated';
+      barang.detailSatuans.forEach((b) => (b.barangId = b.barangId + 1));
       logger.info({ barang: barang });
       const response = await request(app.getHttpServer())
         .put('/api/barang/' + (barang.id + 1))

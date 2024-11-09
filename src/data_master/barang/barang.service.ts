@@ -5,10 +5,13 @@ import { SubkategoriService } from '../subkategori/subkategori.service';
 import {
   BarangResponse,
   CreateBarangRequest,
-  DetailSatuanResponse,
   SearchBarangRequest,
   UpdateBarangRequest,
 } from '../../model/data.master/barang.model';
+import {
+  DetailGudangResponse,
+  DetailSatuanResponse,
+} from '../../model/data.master/property.barang.model';
 import { ValidationService } from '../../common/validation.service';
 import { BarangValidation } from './barang.validation';
 import { SatuanService } from '../satuan/satuan.service';
@@ -16,6 +19,8 @@ import { randomUUID } from 'crypto';
 import { $Enums, Barang, Supplier } from '@prisma/client';
 import { WebResponse } from '../../model/web.response';
 import { NotFoundError } from '../../common/toko.exceptions';
+import { GudangService } from '../gudang/gudang.service';
+import { GudangResponse } from '../../model/data.master/gudang.model';
 
 @Injectable()
 export class BarangService {
@@ -25,9 +30,14 @@ export class BarangService {
     private kategoriService: KategoriService,
     private subkategoriService: SubkategoriService,
     private satuanService: SatuanService,
+    private gudangService: GudangService,
   ) {}
 
-  toBarangResponse(barang: any, detailSatuans: any = null): BarangResponse {
+  toBarangResponse(
+    barang: any,
+    detailSatuans: any = null,
+    detailGudangs: any = null,
+  ): BarangResponse {
     const barangResponse: BarangResponse = {
       id: barang.id,
       nama: barang.nama,
@@ -60,6 +70,7 @@ export class BarangService {
             : this.satuanService.toSatuanResponse(barang.satuan),
         },
       ],
+      detailGudangs: [],
     };
 
     // Optionally map associated data if available
@@ -91,6 +102,35 @@ export class BarangService {
           detail.satuanId = item.satuanId;
           detail.amount = item.amount.toNumber();
           detail.satun = this.satuanService.toSatuanResponse(item.satuan);
+
+          return detail;
+        },
+      );
+    }
+
+    if (detailGudangs) {
+      barangResponse.detailGudangs = detailGudangs.map(
+        (item: {
+          barangId: number;
+          gudangId: number;
+          berat: number;
+          jumlah: number;
+          jumlahMinimal: number;
+          satuans: {
+            id: number;
+            nama: string;
+            jenisBarang: $Enums.JenisBarang;
+          };
+          gudangs: GudangResponse;
+        }) => {
+          const detail = new DetailGudangResponse();
+          detail.barangId = item.barangId;
+          detail.gudangId = item.gudangId;
+          detail.berat = item.berat;
+          detail.jumlah = item.jumlah;
+          detail.jumlahMinimal = item.jumlahMinimal;
+          detail.satuan = this.satuanService.toSatuanResponse(item.satuans);
+          detail.gudang = item.gudangs;
 
           return detail;
         },
@@ -176,9 +216,10 @@ export class BarangService {
       );
     }
 
-    const { detailSatuans, ...dataBarang } = validatedCreateRequest;
-    const [barang, savedDetailSatuan] = await this.prismaService.$transaction(
-      async (prisma) => {
+    const { detailSatuans, detailGudangs, ...dataBarang } =
+      validatedCreateRequest;
+    const [barang, savedDetailSatuan, savedDetailGudang] =
+      await this.prismaService.$transaction(async (prisma) => {
         const barang = await prisma.barang.create({
           data: dataBarang,
           include: {
@@ -202,11 +243,53 @@ export class BarangService {
           },
         );
 
-        return [barang, savedDetailSatuan];
-      },
-    );
+        const gudangs = await prisma.gudang.findMany({
+          select: {
+            id: true,
+          },
+        });
 
-    return this.toBarangResponse(barang, savedDetailSatuan);
+        let dataGudang = [];
+        let gudangNotInDetailGudangs = gudangs;
+
+        if (detailGudangs) {
+          gudangNotInDetailGudangs = gudangs.filter(
+            (gudang) =>
+              !detailGudangs.some((detail) => detail.gudangId === gudang.id),
+          );
+          dataGudang = detailGudangs.map((item) => {
+            return {
+              barangId: barang.id,
+              ...item,
+            };
+          });
+        }
+
+        gudangNotInDetailGudangs.forEach((item) =>
+          dataGudang.push({
+            barangId: barang.id,
+            satuanId: barang.satuanId,
+            gudangId: item.id,
+            jumlah: 0,
+            jumlahMinimal: 0,
+            berat: 0,
+          }),
+        );
+
+        const savedDetailGudang = await prisma.detailGudang.createManyAndReturn(
+          {
+            data: dataGudang,
+            include: {
+              gudangs: true,
+              satuans: true,
+            },
+          },
+        );
+
+        return [barang, savedDetailSatuan, savedDetailGudang];
+      });
+
+    return this.toBarangResponse(barang, savedDetailSatuan, savedDetailGudang);
   }
 
   async update(request: UpdateBarangRequest): Promise<BarangResponse> {

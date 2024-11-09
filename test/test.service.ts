@@ -290,6 +290,10 @@ export class TestService {
     await this.prismaService.$transaction([deleteDetailSatuan, deleteBarang]);
   }
 
+  async createGudangBarangTest() {
+    return await this.createGudangTestInternal('gudang barang test');
+  }
+
   async createBarang(): Promise<CreateBarangRequest> {
     const kategori = await this.getKategoriTest();
     const subkategori = await this.getSubkategoriTest();
@@ -559,11 +563,19 @@ export class TestService {
   }
 
   async createGudangTest() {
+    return await this.createGudangTestInternal('gudang test');
+  }
+
+  async createGudangTestInternal(
+    name: string,
+    alamat: string = 'jl. in aja dulu',
+    keterangan: string = 'gudang untuk test',
+  ) {
     return await this.prismaService.gudang.create({
       data: {
-        nama: 'gudang test',
-        alamat: 'jl. in aja dulu',
-        keterangan: 'gudang untuk test',
+        nama: name,
+        alamat: alamat,
+        keterangan: keterangan,
         isActive: true,
       },
     });
