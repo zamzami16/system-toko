@@ -17,4 +17,5 @@ updates:
       eslint-packages:
         patterns:
           - 'eslint'
-          - '@typescript-eslint/eslint-*'
+          - '@typescript-eslint/eslint-plugin'
+          - '@typescript-eslint/parser'
