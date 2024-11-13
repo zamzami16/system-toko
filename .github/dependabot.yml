@@ -5,12 +5,16 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  - package-ecosystem: 'npm' # See documentation for possible values
+    directory: '/' # Location of package manifests
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
     groups:
       prisma-dependencies:
         patterns:
-          - "prisma"
-          - "@prisma/client"
+          - 'prisma'
+          - '@prisma/client'
+      eslint-packages:
+        patterns:
+          - 'eslint'
+          - '@typescript-eslint/eslint-*'
