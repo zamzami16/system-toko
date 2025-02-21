@@ -37,6 +37,4 @@ updates:
       - "dependencies"
       - "dependabot"
     versioning-strategy: "increase" # Only update to newer versions
-    automerge: true
-    automerge-type: "pr" # Automatically merge PRs once checks pass
 
