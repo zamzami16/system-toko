@@ -5,21 +5,38 @@
 
 version: 2
 updates:
-  - package-ecosystem: 'npm' # See documentation for possible values
-    directory: '/' # Location of package manifests
+  - package-ecosystem: "npm" # Specifies the ecosystem (Node.js)
+    directory: "/" # Location of package.json and package-lock.json
     schedule:
-      interval: 'weekly'
+      interval: "weekly" # Run updates weekly
+    ignore:
+      - dependency-name: "prisma"
+        versions: ["<4.0.0"] # Ignore old versions below 4.0.0
+      - dependency-name: "@prisma/client"
+        versions: ["<4.0.0"]
     groups:
       prisma-dependencies:
         patterns:
-          - 'prisma'
-          - '@prisma/client'
+          - "prisma"
+          - "@prisma/client"
       eslint-packages:
         patterns:
-          - 'eslint'
-          - '@typescript-eslint/eslint-plugin'
-          - '@typescript-eslint/parser'
+          - "eslint"
+          - "@typescript-eslint/eslint-plugin"
+          - "@typescript-eslint/parser"
     commit-message:
-      prefix: 'deps'
+      prefix: "deps"
+      include: "scope" # Adds the scope of the update (e.g., dependency name)
+    open-pull-requests-limit: 10 # Prevent too many PRs at once
+    rebase-strategy: "auto" # Automatically rebase if needed
+    reviewers:
+      - "zamzami16" # Replace with your GitHub username or team
+    assignees:
+      - "zamzami16" # Replace with a team or username
+    labels:
+      - "dependencies"
+      - "dependabot"
+    versioning-strategy: "increase" # Only update to newer versions
     automerge: true
-    automerge-type: 'pr'
+    automerge-type: "pr" # Automatically merge PRs once checks pass
+
