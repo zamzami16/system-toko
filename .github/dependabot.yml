@@ -24,6 +24,14 @@ updates:
           - "eslint"
           - "@typescript-eslint/eslint-plugin"
           - "@typescript-eslint/parser"
+      nestjs-packages:
+        patterns:
+          - "@nestjs/testing"
+          - "@nestjs/swagger"
+          - "@nestjs/platform-express"
+          - "@nestjs/common"
+          - "@nestjs/core"
+          - "@nestjs/axios"
     commit-message:
       prefix: "deps"
       include: "scope" # Adds the scope of the update (e.g., dependency name)
