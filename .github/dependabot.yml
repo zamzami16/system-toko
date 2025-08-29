@@ -37,8 +37,6 @@ updates:
       include: "scope" # Adds the scope of the update (e.g., dependency name)
     open-pull-requests-limit: 10 # Prevent too many PRs at once
     rebase-strategy: "auto" # Automatically rebase if needed
-    reviewers:
-      - "zamzami16" # Replace with your GitHub username or team
     assignees:
       - "zamzami16" # Replace with a team or username
     labels:
