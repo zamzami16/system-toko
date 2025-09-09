@@ -2,18 +2,20 @@ name: Dependabot auto-merge
 
 on:
   pull_request:
-    types:
-      - opened
-      - reopened
-      - synchronize
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: write        # perlu untuk meng-enable auto-merge
+  pull-requests: write   # perlu untuk mengubah status PR
 
 jobs:
   automerge:
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]'
+    if: github.actor == 'dependabot[bot]' || startsWith(github.head_ref, 'dependabot/')
     steps:
-      - name: Enable auto-merge
+      - name: Enable auto-merge for this PR
         uses: peter-evans/enable-pull-request-automerge@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          merge-method: squash   # squash = clean commit history
+          pull-request-number: ${{ github.event.pull_request.number }}
+          merge-method: squash
