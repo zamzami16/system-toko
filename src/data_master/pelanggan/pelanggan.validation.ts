@@ -1,9 +1,9 @@
-import { ZodType, z } from 'zod';
+import { z } from 'zod';
 import { ContactValidation } from '../contact/contact.validation';
 import { JenisPajak } from '@prisma/client';
 
 export class PelangganValidation {
-  static readonly CREATE: ZodType = z.object({
+  static readonly CREATE = z.object({
     contactId: z.number().positive().optional(),
     contact: ContactValidation.CREATE.optional(),
     jenisPelangganId: z.number().positive(),
@@ -15,7 +15,7 @@ export class PelangganValidation {
     jenisPajak: z.nativeEnum(JenisPajak).optional().default(JenisPajak.None),
   });
 
-  static readonly UPDATE: ZodType = z.object({
+  static readonly UPDATE = z.object({
     contactId: z.number().positive().optional(),
     jenisPelangganId: z.number().positive().optional(),
     isCanCredit: z.boolean().optional(),
@@ -26,7 +26,7 @@ export class PelangganValidation {
     jenisPajak: z.nativeEnum(JenisPajak).optional(),
   });
 
-  static readonly SEARCH: ZodType = ContactValidation.SEARCH_SCHEMA.extend({
+  static readonly SEARCH = ContactValidation.SEARCH_SCHEMA.extend({
     jenisPelanggan: z.string().optional(),
     isCanCredit: z.boolean().optional(),
     jenisPajak: z.nativeEnum(JenisPajak).optional(),
