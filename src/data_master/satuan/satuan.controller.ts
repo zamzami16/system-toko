@@ -90,7 +90,7 @@ export class SatuanController {
     enum: JenisBarang,
     isArray: false,
   })
-  async serach(
+  async search(
     @Query('id', new ParseIntPipe({ optional: true })) satuanId?: number,
     @Query('nama') nama?: string,
     @Query('jenisbarang') jenisBarang?: JenisBarang,
