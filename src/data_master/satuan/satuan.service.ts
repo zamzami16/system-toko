@@ -93,7 +93,7 @@ export class SatuanService {
   ): Promise<WebResponse<SatuanResponse[]>> {
     const skip = size * (page - 1);
     const total = await this.prismaService.satuanBarang.count();
-    const totalPages = Math.ceil(total / page);
+    const totalPages = Math.ceil(total / size);
 
     const satuans = await this.prismaService.satuanBarang.findMany({
       skip: skip,
@@ -111,12 +111,12 @@ export class SatuanService {
   }
 
   async remove(satuanId: number): Promise<SatuanResponse> {
-    let kategori = await this.getSatuanOr404(satuanId);
-    kategori = await this.prismaService.satuanBarang.delete({
+    let satuan = await this.getSatuanOr404(satuanId);
+    satuan = await this.prismaService.satuanBarang.delete({
       where: { id: satuanId },
     });
 
-    return this.toSatuanResponse(kategori);
+    return this.toSatuanResponse(satuan);
   }
 
   async search(
@@ -166,8 +166,6 @@ export class SatuanService {
       where: {
         AND: filters,
       },
-      skip: skip,
-      take: searchRequest.size,
     });
 
     const totalPages = Math.ceil(total / searchRequest.size);
