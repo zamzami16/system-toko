@@ -63,7 +63,7 @@ export class CreateBarangRequest {
   hargaJual_1: number = 0;
   hargaJual_2: number = 0;
   hargaJual_3: number = 0;
-  barcode: string;
+  barcode?: string | null;
   expired?: Date;
   diskonRp: number = 0;
   diskonPersen: number = 0;

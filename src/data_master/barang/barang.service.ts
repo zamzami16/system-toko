@@ -178,7 +178,10 @@ export class BarangService {
     const validatedCreateRequest: CreateBarangRequest =
       this.validationService.validate(BarangValidation.CREATE, request);
 
-    if (validatedCreateRequest.barcode.toUpperCase() !== 'OTOMATIS') {
+    if (
+      validatedCreateRequest.barcode &&
+      validatedCreateRequest.barcode.toUpperCase() !== 'OTOMATIS'
+    ) {
       const baracodeBarangExists = await this.getBarangFromBarcode(
         validatedCreateRequest.barcode,
       );
