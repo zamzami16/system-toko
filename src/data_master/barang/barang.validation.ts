@@ -1,5 +1,5 @@
 import { JenisBarang } from '@prisma/client';
-import { ZodType, z } from 'zod';
+import { z } from 'zod';
 
 export const CreateDetailSatuanSchema = z.object({
   satuanId: z.number().positive(),
@@ -92,7 +92,7 @@ const validateCreateBarangConditions = (data: any, ctx: any) => {
 };
 
 export class BarangValidation {
-  static readonly CREATE: ZodType = z
+  static readonly CREATE = z
     .object({
       nama: z.string().min(1).max(500),
       jenisBarang: z.nativeEnum(JenisBarang),
@@ -130,7 +130,7 @@ export class BarangValidation {
     })
     .superRefine(validateCreateBarangConditions);
 
-  static readonly UPDATE: ZodType = z
+  static readonly UPDATE = z
     .object({
       id: z.number().positive(),
       nama: z.string().min(1).max(500),
@@ -165,7 +165,7 @@ export class BarangValidation {
     })
     .superRefine(validateUpdateDetailSatuanConditions);
 
-  static readonly SEARCH: ZodType = z.object({
+  static readonly SEARCH = z.object({
     id: z.number().min(0).optional(),
     nama: z.string().optional(),
     kategori: z.string().optional(),
