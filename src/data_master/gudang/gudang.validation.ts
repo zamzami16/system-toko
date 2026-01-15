@@ -1,14 +1,14 @@
-import { ZodType, z } from 'zod';
+import { z } from 'zod';
 
 export class GudangValidation {
-  static readonly CREATE: ZodType = z.object({
+  static readonly CREATE = z.object({
     nama: z.string().min(1),
     alamat: z.string().optional(),
     keterangan: z.string().optional(),
     isActive: z.boolean().default(true),
   });
 
-  static readonly UPDATE: ZodType = z.object({
+  static readonly UPDATE = z.object({
     id: z.number().positive(),
     nama: z.string().min(1).optional(),
     alamat: z.string().optional(),
@@ -16,7 +16,7 @@ export class GudangValidation {
     isActive: z.boolean().default(true),
   });
 
-  static readonly SEARCH: ZodType = z.object({
+  static readonly SEARCH = z.object({
     nama: z.string().optional(),
     alamat: z.string().optional(),
     keterangan: z.string().optional(),

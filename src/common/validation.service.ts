@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { ZodType } from 'zod';
+import { z } from 'zod';
 
 @Injectable()
 export class ValidationService {
-  validate<T>(zodType: ZodType<T>, data: T): T {
+  validate<T>(zodType: z.ZodType<T>, data: unknown): T {
     return zodType.parse(data);
   }
 }
