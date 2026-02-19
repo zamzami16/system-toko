@@ -1,19 +1,19 @@
 import { JenisBarang } from '@prisma/client';
-import { ZodType, z } from 'zod';
+import { z } from 'zod';
 
 export class SatuanValidation {
-  static readonly CREATE: ZodType = z.object({
+  static readonly CREATE = z.object({
     nama: z.string().min(1).max(200),
     jenisBarang: z.nativeEnum(JenisBarang),
   });
 
-  static readonly UPDATE: ZodType = z.object({
+  static readonly UPDATE = z.object({
     id: z.number().positive(),
     nama: z.string().min(1).max(200),
     jenisBarang: z.nativeEnum(JenisBarang),
   });
 
-  static readonly SEARCH: ZodType = z.object({
+  static readonly SEARCH = z.object({
     id: z.number().positive().optional(),
     nama: z.string().optional(),
     jenisBarang: z.nativeEnum(JenisBarang).optional(),
