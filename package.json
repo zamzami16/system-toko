@@ -40,7 +40,7 @@
     "zod": "^3.24.4"
   },
   "devDependencies": {
-    "@nestjs/cli": "^11.0.21",
+    "@nestjs/cli": "^11.0.22",
     "@nestjs/schematics": "^11.1.0",
     "@nestjs/testing": "^11.1.25",
     "@types/bcrypt": "^6.0.0",
